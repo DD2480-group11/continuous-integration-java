@@ -24,7 +24,7 @@ public class Functions {
     // Runs the bash script with given filename. The script should be located in the scripts folder.
     // Returns the output as a String.
     public static String runBashScript(String filename) throws IOException {
-        return runCommand("bash scripts/" + filename);
+        return runCommand("bash main/code/scripts/" + filename);
     }
 
     // Tries to compile the cloned code, using the bash script "compilationCheck.sh".
