@@ -35,6 +35,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // 2nd compile the code
         System.out.println(Functions.runCommand("pwd"));
         Functions.cloneThisRepo();
+        String result = Functions.runCommand("bash script.sh");
+        System.out.println(result);
 
         response.getWriter().println("CI job done");
     }
