@@ -46,7 +46,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             System.out.println("Code compiled succesfully.");
         }
         else {
-            System.out.println("Code compilation failed.");asd
+            System.out.println("Code compilation failed.");
         }
 
         // --- FOR DEBUGGING PURPOSES ---
