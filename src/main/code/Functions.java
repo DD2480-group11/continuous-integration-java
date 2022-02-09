@@ -10,6 +10,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+
+
 import java.util.stream.Collectors;
 
 public class Functions {
@@ -58,6 +60,7 @@ public class Functions {
         // The branch name starts at index 19 in the string, and ends with a quotation mark.
         int i = 19;
         char c = JSONstring.charAt(i);
+        i++;
         while (c != '"') {
             branchName += c;
             c = JSONstring.charAt(i);
@@ -66,6 +69,4 @@ public class Functions {
 
         return branchName;
     }
-
-    
 }

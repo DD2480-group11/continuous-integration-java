@@ -10,6 +10,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import java.util.stream.Collectors;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -54,6 +55,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         response.getWriter().println("CI job done");
     }
+
 
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
