@@ -16,4 +16,8 @@ public class Functions {
     public static void cloneThisRepo() throws IOException {
         runCommand("git clone git@github.com:DD2480-group11/continuous-integration-java.git");
     }
+
+    public static void deleteClonedRepo() throws IOException {
+        runCommand("rm -rf continuous-integration-java");
+    }
 }
