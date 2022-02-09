@@ -10,6 +10,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import java.util.stream.Collectors;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -43,11 +44,18 @@ public class ContinuousIntegrationServer extends AbstractHandler
             System.out.println("Code compilation failed.");
         }
 
+        // Print branch name of the commit
+        String JSONstring = Functions.JSONtoString(request);
+        String branchName = Functions.getBranchName(JSONstring);
+        System.out.println("Branch name of commit: " + branchName);
+
+
         //String result = Functions.runCommand("bash script.sh");
         //System.out.println(result);
 
         response.getWriter().println("CI job done");
     }
+
 
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception

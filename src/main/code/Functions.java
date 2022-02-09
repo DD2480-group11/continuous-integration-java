@@ -1,6 +1,18 @@
 package main.code;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+
 import java.io.IOException;
+
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+
+
+
+import java.util.stream.Collectors;
 
 public class Functions {
     // Runs command and returns the output as a String.
@@ -32,5 +44,29 @@ public class Functions {
     public static boolean compilationCheck() throws IOException {
         String compilationResult = runBashScript("compilationCheck.sh");
         return compilationResult.equals("success\n");
+    }
+
+    // Turns a JSON HttpServletRequest object into a String.
+    public static String JSONtoString(HttpServletRequest request) throws IOException {
+        return request.getReader().lines().collect(Collectors.joining());
+    }
+
+    // Takes a JSON String with github commit information from a github webhook.
+    // Extracts and returns the name of the branch that was pushed to.
+    public static String getBranchName(String JSONstring) throws IOException  {
+        String branchName = "";
+
+        // Extract each character from the branch name.
+        // The branch name starts at index 19 in the string, and ends with a quotation mark.
+        int i = 19;
+        char c = JSONstring.charAt(i);
+        i++;
+        while (c != '"') {
+            branchName += c;
+            c = JSONstring.charAt(i);
+            i++;
+        }
+
+        return branchName;
     }
 }
