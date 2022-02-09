@@ -34,7 +34,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // 1st clone your repository
         // 2nd compile the code
         System.out.println(Functions.runCommand("pwd"));
-        //Functions.runCommand("git clone git@github.com:DD2480-group11/continuous-integration-java.git");
+        Functions.cloneThisRepo();
 
         response.getWriter().println("CI job done");
     }

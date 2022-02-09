@@ -12,4 +12,8 @@ public class Functions {
         String result = new String(process.getInputStream().readAllBytes());
         return result;
     }
+
+    public static void cloneThisRepo() throws IOException {
+        runCommand("git clone git@github.com:DD2480-group11/continuous-integration-java.git");
+    }
 }
