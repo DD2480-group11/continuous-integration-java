@@ -8,6 +8,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+
 /** 
  Skeleton of a ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
@@ -30,6 +31,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // for example
         // 1st clone your repository
         // 2nd compile the code
+        System.out.println(runCommand("pwd"));
+        runCommand("git clone git@github.com:DD2480-group11/continuous-integration-java.git");
 
         response.getWriter().println("CI job done");
     }
@@ -42,4 +45,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
         server.start();
         server.join();
     }
+
+    // Runs command and returns the output as a String.
+    public static String runCommand(String command) throws IOException {
+        ProcessBuilder pb = new ProcessBuilder();
+	pb.command("bash", "-c", command);
+        Process process = pb.start();
+
+        String result = new String(process.getInputStream().readAllBytes());
+        return result;
+    }
 }
+
