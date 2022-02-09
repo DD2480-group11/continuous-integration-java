@@ -2,7 +2,7 @@
 
 ### How to run the tests
 
-Navigate to the `src` folder
+Navigate to the `src` folder. Add the `hamcrest.junit` and `hamcrest.jar` files to that folder.
 ```
 JETTY_VERSION=7.0.2.v20100331
 javac -cp ".:hamcrest.jar:junit.jar" "main/serverTests/Tests.java"
