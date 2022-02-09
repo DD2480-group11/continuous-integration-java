@@ -45,14 +45,18 @@ public class ContinuousIntegrationServer extends AbstractHandler
             System.out.println("Code compilation failed.");
         }
 
-        String requestData = request.getReader().lines().collect(Collectors.joining());
-        System.out.println(requestData);
+        System.out.println(JSONtoSring(request));
 
 
         //String result = Functions.runCommand("bash script.sh");
         //System.out.println(result);
 
         response.getWriter().println("CI job done");
+    }
+
+    // Turns the JSON request and turns into a String.
+    public static String JSONtoSring(HttpServletRequest request) throws IOException {
+        return request.getReader().lines().collect(Collectors.joining());
     }
 
     // used to start the CI server in command line
