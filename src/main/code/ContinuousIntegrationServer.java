@@ -45,7 +45,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
             System.out.println("Code compilation failed.");
         }
 
-        System.out.println(JSONtoSring(request));
+        //System.out.println(JSONtoString(request));
+        String branchName = getBranchName(request);
+        System.out.println("Branch name of commit: " + branchName);
 
 
         //String result = Functions.runCommand("bash script.sh");
@@ -54,8 +56,27 @@ public class ContinuousIntegrationServer extends AbstractHandler
         response.getWriter().println("CI job done");
     }
 
+    // Takes a HttpServletRequest object with JSON data about a github commit/push.
+    // Extracts and returns the name of the branch that was pushed to.
+    public static String getBranchName(HttpServletRequest request) throws IOException  {
+        String strResponse = JSONtoString(request);
+        String branchName = "";
+
+        // Extract each character from the branch name.
+        // The branch name starts at index 19 in the string, and ends with a quotation mark.
+        int i = 19;
+        char c = strResponse.charAt(i);
+        while (c != '"') {
+            branchName += c;
+            c = strResponse.charAt(i);
+            i++;
+        }
+
+        return branchName;
+    }
+
     // Turns the JSON request and turns into a String.
-    public static String JSONtoSring(HttpServletRequest request) throws IOException {
+    public static String JSONtoString(HttpServletRequest request) throws IOException {
         return request.getReader().lines().collect(Collectors.joining());
     }
 
