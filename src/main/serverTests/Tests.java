@@ -7,7 +7,7 @@ import java.beans.Transient;
 import main.code.*;
 
 import java.io.IOException;
-
+import java.io.File; 
 
 // This class includes tests for various functions.
 public class Tests {
@@ -36,5 +36,17 @@ public class Tests {
         assertTrue(extractedBranchName.equals(expectedBranchName)); 
     }
 
+    @Test 
+    public void test_cloneBranch() throws IOException {
+        // Arrange: Delete the old cloned repo
+        Functions.deleteClonedRepo();
 
+        // Act: Clone the main branch of the repo
+        Functions.cloneBranch("main");
+
+        // Assert: Check if there actually is a cloned repo, with the correct name.
+        File f = new File("continuous-integration-java");
+        boolean repoExists = f.exists() && f.isDirectory();
+        assertTrue(repoExists);
+    }
 }

@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 */
 public class ContinuousIntegrationServer extends AbstractHandler
 {
+    // This function is called each time the github webhook is activated.
+    // The branch of the new commit will be cloned, compiled, and tested.
+    // Finally, the user who made the commit will be notified of the results.
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -30,13 +33,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         System.out.println(target);
 
-        // here you do all the continuous integration tasks
-        // for example
-        // 1st clone your repository
-        // 2nd compile the code
-        System.out.println(Functions.runCommand("pwd"));
+        // Extract the branch name of the github commit
+        String JSONstring = Functions.JSONtoString(request);
+        String branchName = Functions.getBranchName(JSONstring);
+
+        // Delete the old cloned repo, and clone the branch of the new commit.
         Functions.deleteClonedRepo();
-        Functions.cloneThisRepo();
+        Functions.cloneBranch(branchName);
+
+        // Check if compilation of the server of the cloned repo is successful.
         if (Functions.compilationCheck()) {
             System.out.println("Code compiled succesfully.");
         }
@@ -44,14 +49,11 @@ public class ContinuousIntegrationServer extends AbstractHandler
             System.out.println("Code compilation failed.");
         }
 
+        // --- FOR DEBUGGING PURPOSES ---
+
         // Print branch name of the commit
-        String JSONstring = Functions.JSONtoString(request);
-        String branchName = Functions.getBranchName(JSONstring);
         System.out.println("Branch name of commit: " + branchName);
 
-
-        //String result = Functions.runCommand("bash script.sh");
-        //System.out.println(result);
 
         response.getWriter().println("CI job done");
     }
