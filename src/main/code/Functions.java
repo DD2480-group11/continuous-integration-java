@@ -25,10 +25,17 @@ public class Functions {
         return result;
     }
 
+    // Clones this git repo into the folder src/continuous-integration-java.
     public static void cloneThisRepo() throws IOException {
         runCommand("git clone git@github.com:DD2480-group11/continuous-integration-java.git");
     }
 
+    // Clones the specified branch of this git repo into the folder src/continuous-integration-java.
+    public static void cloneBranch(String branchName) throws IOException {
+        runCommand("git clone -b " + branchName + " git@github.com:DD2480-group11/continuous-integration-java.git");
+    }
+
+    // Deletes the repo src/continuous-integration-java.
     public static void deleteClonedRepo() throws IOException {
         runCommand("rm -rf continuous-integration-java");
     }
