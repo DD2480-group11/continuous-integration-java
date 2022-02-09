@@ -10,6 +10,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import java.util.stream.Collectors;
+
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -42,6 +44,10 @@ public class ContinuousIntegrationServer extends AbstractHandler
         else {
             System.out.println("Code compilation failed.");
         }
+
+        String requestData = request.getReader().lines().collect(Collectors.joining());
+        System.out.println(requestData);
+
 
         //String result = Functions.runCommand("bash script.sh");
         //System.out.println(result);
