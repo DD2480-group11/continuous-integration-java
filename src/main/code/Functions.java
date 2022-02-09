@@ -21,10 +21,10 @@ public class Functions {
         runCommand("rm -rf continuous-integration-java");
     }
 
-    // Runs the bash script with given filename. The script should be located in the src folder.
-    // Returns the output as a String
+    // Runs the bash script with given filename. The script should be located in the scripts folder.
+    // Returns the output as a String.
     public static String runBashScript(String filename) throws IOException {
-        return runCommand("bash " + filename);
+        return runCommand("bash scripts/" + filename);
     }
 
     // Tries to compile the cloned code, using the bash script "compilationCheck.sh".
