@@ -36,6 +36,12 @@ public class ContinuousIntegrationServer extends AbstractHandler
         System.out.println(Functions.runCommand("pwd"));
         Functions.deleteClonedRepo();
         Functions.cloneThisRepo();
+        if (Functions.compilationCheck()) {
+            System.out.println("Code compiled succesfully.");
+        }
+        else {
+            System.out.println("Code compilation failed.");
+        }
 
         //String result = Functions.runCommand("bash script.sh");
         //System.out.println(result);
