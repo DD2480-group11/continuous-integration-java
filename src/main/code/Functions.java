@@ -71,7 +71,7 @@ public class Functions {
 
     // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
     public static String runTests() throws IOException{
-        return runCommand("java -cp \".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar\" org.junit.runner.JUnitCore \"main.serverTests.Tests\"");
+        return runCommand("java -cp \".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar\" org.junit.runner.JUnitCore \"continuous-integration-java.src.main.serverTests.Tests\"");
     }
 
     // Turns a JSON HttpServletRequest object into a String.
