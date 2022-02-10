@@ -46,10 +46,17 @@ public class Functions {
         return runCommand("bash main/code/scripts/" + filename);
     }
 
-    // Tries to compile the cloned code, using the bash script "compilationCheck.sh".
+    // Tries to compile the server of the cloned repo, using the bash script "compilationCheck.sh".
     // Returns true if compilation was successful, otherwise false.
     public static boolean compilationCheck() throws IOException {
         String compilationResult = runBashScript("compilationCheck.sh");
+        return compilationResult.equals("success\n");
+    }
+
+    // Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh".
+    // Returns true if compilation was successful, otherwise false.
+    public static boolean compileTestsCheck() throws IOException {
+        String compilationResult = runBashScript("compileTestsCheck.sh");
         return compilationResult.equals("success\n");
     }
 
