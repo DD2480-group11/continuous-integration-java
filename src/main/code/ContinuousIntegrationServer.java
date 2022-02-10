@@ -29,7 +29,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
     {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        baseRequest.setHandled(true);
+        baseRequest.setHandled(true); // TEST
 
         System.out.println(target);
 
@@ -47,6 +47,14 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
         else {
             System.out.println("Code compilation failed.");
+        }
+
+        // Check if compilation of the server of the cloned repo is successful.
+        if (Functions.compileTestsCheck()) {
+            System.out.println("Tests compiled succesfully.");
+        }
+        else {
+            System.out.println("Tests compilation failed.");
         }
 
         // --- FOR DEBUGGING PURPOSES ---
