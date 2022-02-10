@@ -56,7 +56,7 @@ public class Functions {
     // Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh".
     // Returns true if compilation was successful, otherwise false.
     public static boolean compileTestsCheck() throws IOException {
-        String compilationResult = runBashScript("compileTestsCheck.sh");
+        String compilationResult = runBashScript("compileTestsCheck.sh"); //
         return compilationResult.equals("success\n");
     }
 
