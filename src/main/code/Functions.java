@@ -10,6 +10,15 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.Properties;
+import java.util.Scanner;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 
 
 import java.util.stream.Collectors;
@@ -86,5 +95,72 @@ public class Functions {
         }
 
         return branchName;
+    }
+
+    // Takes a JSON String with github commit information from a github webhook.
+    // Extracts and returns the email of the committer. 
+    public static String getEmail(String JSONstring) throws IOException {
+        String email = "";
+        String comStr = "\"committer\":{";
+
+        //get index of committer section
+        int i = JSONstring.indexOf(comStr);
+
+        String restJSON = JSONstring.substring(i+comStr.length(), JSONstring.length());
+        String emailStr = "\"email\":\"";
+
+        // get index of email under committer section
+        int j = restJSON.indexOf(emailStr);
+
+        int k = (j+emailStr.length());
+        char c = restJSON.charAt(k);
+
+        while (c != '"') {
+                email += c;
+                k++;
+                c = restJSON.charAt(k);
+        }
+
+        return email;
+    }
+
+    public static boolean sendFromServer(String recipient, String text) {
+
+        String sender = "ciserverupdate@gmail.com";
+        String password = "skickamail1!";
+
+        if(!(recipient.contains("@") && recipient.contains(".")) ){
+            return false;
+        }
+
+        // setting up gmail smtp
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true"); 
+
+        // authenticate to gmail
+        Session session = Session.getInstance(properties,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(sender,password);
+                    }
+                });
+        try
+        {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(sender));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+            message.setSubject("Result from CI Server");
+            message.setText(text);
+            Transport.send(message);
+        }
+        catch (MessagingException mex)
+        {
+            mex.printStackTrace();
+
+        }
+        return true;
     }
 }

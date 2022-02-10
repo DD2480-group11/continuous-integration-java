@@ -10,6 +10,15 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.Properties;
+import java.util.Scanner;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +44,10 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Extract the branch name of the github commit
         String JSONstring = Functions.JSONtoString(request);
+
         String branchName = Functions.getBranchName(JSONstring);
+
+        String email = Functions.getEmail(JSONstring);
 
         // Delete the old cloned repo, and clone the branch of the new commit.
         Functions.deleteClonedRepo();
@@ -43,9 +55,11 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Check if compilation of the server is successful.
         if (Functions.compilationCheck()) {
+            Functions.sendFromServer(email, "The code compilation worked!");
             System.out.println("Server compiled succesfully.");
         }
         else {
+            
             System.out.println("Server compilation failed.");
         }
 
@@ -58,6 +72,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
         else {
             System.out.println("Tests compilation failed.");
+
         }
 
         // --- FOR DEBUGGING PURPOSES ---

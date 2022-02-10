@@ -1,5 +1,15 @@
 package main.serverTests;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.Properties;
+import java.util.Scanner;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.beans.Transient;
@@ -49,4 +59,23 @@ public class Tests {
         boolean repoExists = f.exists() && f.isDirectory();
         assertTrue(repoExists);
     }
+
+    @Test 
+    public void test_sendFromServer1() throws IOException {
+        // Arrange: Add an invalid email as recipient
+        String email = "xxxxx";
+
+        assertFalse(Functions.sendFromServer(email, "text"));
+    }
+
+    @Test 
+    public void test_sendFromServer2() throws IOException {
+        // Arrange: Add an invalid email as recipient
+        String email = "xxxx@x";
+
+        assertFalse(Functions.sendFromServer(email, "text"));
+    }
+
+   
+
 }
