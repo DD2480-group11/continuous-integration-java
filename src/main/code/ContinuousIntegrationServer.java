@@ -41,6 +41,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         Functions.deleteClonedRepo();
         Functions.cloneBranch(branchName);
 
+
         // Check if compilation of the server of the cloned repo is successful.
         if (Functions.compilationCheck()) {
             System.out.println("Code compiled succesfully.");
@@ -66,5 +67,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
         server.setHandler(new ContinuousIntegrationServer());
         server.start();
         server.join();
+        System.out.println("Hello");
     }
 }
