@@ -141,7 +141,7 @@ public class Functions {
             message.setText(text);
             Transport.send(message);
         }
-        catch (MessagingException mex)
+        catch (SendFailedException mex)
         {
             mex.printStackTrace();
             System.out.println("not working");
