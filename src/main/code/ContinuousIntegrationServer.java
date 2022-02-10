@@ -62,7 +62,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             System.out.println("Server compiled succesfully.");
         }
         else {
-            //TODO: add compilation errors
+            //TODO: add compilation errors 
             message.append(codeCompilationResult);
             System.out.println("Server compilation failed.");
         }
