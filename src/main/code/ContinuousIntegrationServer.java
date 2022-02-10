@@ -20,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import java.util.stream.Collectors;
+import java.lang.StringBuilder;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -52,35 +53,48 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Delete the old cloned repo, and clone the branch of the new commit.
         Functions.deleteClonedRepo();
         Functions.cloneBranch(branchName);
-
-        // Check if compilation of the server is successful.
-        if (Functions.compilationCheck()) {
-            Functions.sendFromServer(email, "The code compilation worked!");
+        StringBuilder message = new StringBuilder();
+        boolean codeCompiled = Functions.compilationCheck();
+        //String codeCompilationResult = Functions.compilationCheck();
+        boolean  testsCompiled = Functions.compileTestsCheck();
+        //String testCompilationResult = Functions.compileTestsCheck();
+        // Check if compilation of the server is successful
+        if (codeCompiled) {
+            message.append("Code compiled succesfully\n");
             System.out.println("Server compiled succesfully.");
         }
         else {
-            
+            //TODO: add compilation errors
+            //message.append(codeCompilationResult);
+            message.append("Code compilation failed.");
+            //System.out.print(codeCompilationResult);
             System.out.println("Server compilation failed.");
         }
 
         // Check if tests compilation is successful.
-        if (Functions.compileTestsCheck()) {
-            System.out.println("Tests compiled succesfully.");
+        if (testsCompiled) {
+            message.append("Tests compiled succesfully.\n");
             //If tests compile, run the tests and print the result.
             String testResults = Functions.runTests();
             System.out.println(testResults);
+            message.append("Testresults: \n");//
+            message.append(testResults+"\n");
         }
         else {
+            //TODO: Add test compilation issues to message.
+            //System.out.println(testCompilationResult);
+            //message.append(testCompilationResult);
+            message.append("Tests compilation failed.");
             System.out.println("Tests compilation failed.");
 
         }
 
         // --- FOR DEBUGGING PURPOSES ---
 
-        // Print branch name of the commit
-        System.out.println("Branch name of commit: " + branchName);
-
-
+        // Add branch name of the commit to email message.
+        message.append("Branch name of commit: " + branchName);
+        System.out.println(message.toString());
+        Functions.sendFromServer(email,message.toString());
         response.getWriter().println("CI job done");
     }
 
