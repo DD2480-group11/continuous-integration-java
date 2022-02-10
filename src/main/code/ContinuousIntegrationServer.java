@@ -88,7 +88,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Add branch name of the commit to email message.
         message.append("Branch name of commit: " + branchName);
-        System.out.pringln(message.toString());
+        System.out.println(message.toString());
         Functions.sendFromServer(email,message.toString());
         response.getWriter().println("CI job done");
     }
