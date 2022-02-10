@@ -11,6 +11,12 @@ javac -cp servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar "main/code/Continuous
 java -cp .:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar main.code.ContinuousIntegrationServer
 ```
 
+### TRYING
+javac -cp servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar:javax.mail.jar:jakarta.activation.jar "main/code/ContinuousIntegrationServer.java" "main/code/Functions.java" "main/code/SendEmail.java"
+
+
+
+
 The first command makes sure the correct version of Jetty is used. The second command compiles the relevant Server files, with some .jar files. The third command starts the server.
 
 ## How to get a public URL for your server
