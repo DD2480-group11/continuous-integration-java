@@ -66,7 +66,7 @@ public class Functions {
     // Returns true if compilation was successful, otherwise false.
     public static boolean compileTestsCheck() throws IOException {
         String compilationResult = runBashScript("compileTestsCheck.sh");
-         return compilationResult.equals("success\n");
+         return compilationResult.equals("success\n");//
     }
 
     // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
