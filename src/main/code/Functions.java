@@ -113,7 +113,7 @@ public class Functions {
         return email;
     }
 
-    public static void sendFromServer(String recipient, String text) throws MessagingException{
+    public static void sendFromServer(String recipient, String text) {
 
         String sender = "ciserverupdate@gmail.com";
         String password = "skickamail1!";
@@ -123,7 +123,7 @@ public class Functions {
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true"); //TLS
+        properties.put("mail.smtp.starttls.enable", "true"); 
 
         // authenticate to gmail
         Session session = Session.getInstance(properties,
@@ -144,7 +144,7 @@ public class Functions {
         catch (MessagingException mex)
         {
             mex.printStackTrace();
-            throw new  MessagingException("Error");
+           // throws new MessagingException("Error");
         }
 
     }

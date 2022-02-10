@@ -10,6 +10,15 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.Properties;
+import java.util.Scanner;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +56,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Check if compilation of the server of the cloned repo is successful.
         if (Functions.compilationCheck()) {
-            Functions.sendFromServer(email, "The code compilation worked!");
+            Functions.sendFromServer("xxxxxxxx", "The code compilation worked!");
             System.out.println("Code compiled succesfully.");
         }
         else {
