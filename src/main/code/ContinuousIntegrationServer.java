@@ -20,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import java.util.stream.Collectors;
+import java.lang.StringBuilder;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -52,35 +53,41 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Delete the old cloned repo, and clone the branch of the new commit.
         Functions.deleteClonedRepo();
         Functions.cloneBranch(branchName);
-
+        StringBuilder message = new StringBuilder();
+        String codeCompilationResult = Functions.compilationCheck();
+        String testCompilationResult = Functions.compileTestsCheck();
         // Check if compilation of the server is successful.
-        if (Functions.compilationCheck()) {
-            Functions.sendFromServer(email, "The code compilation worked!");
+        if (compilationResult == "\n") {
+            message.append("The code compilation worked!\n");
             System.out.println("Server compiled succesfully.");
         }
         else {
-            
+            //TODO: add compilation errors
+            message.append(codeCompilationResult);
             System.out.println("Server compilation failed.");
         }
 
         // Check if tests compilation is successful.
-        if (Functions.compileTestsCheck()) {
-            System.out.println("Tests compiled succesfully.");
+        if (testCompilationResult == "\n") {
+            message.append("Tests compiled succesfully.\n");
             //If tests compile, run the tests and print the result.
             String testResults = Functions.runTests();
+            message.append(testResults+"\n");
             System.out.println(testResults);
         }
         else {
+            //TODO: Add test compilation issues to message.
+            message.append(testCompilationResult);
             System.out.println("Tests compilation failed.");
 
         }
 
         // --- FOR DEBUGGING PURPOSES ---
 
-        // Print branch name of the commit
-        System.out.println("Branch name of commit: " + branchName);
+        // Add branch name of the commit to email message.
+        message.append("Branch name of commit: " + branchName);
 
-
+        Functions.sendFromServer(email,message);
         response.getWriter().println("CI job done");
     }
 

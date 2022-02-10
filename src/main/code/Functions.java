@@ -57,16 +57,16 @@ public class Functions {
 
     // Tries to compile the server of the cloned repo, using the bash script "compilationCheck.sh".
     // Returns true if compilation was successful, otherwise false.
-    public static boolean compilationCheck() throws IOException {
+    public static String compilationCheck() throws IOException {
         String compilationResult = runBashScript("compilationCheck.sh");
-        return compilationResult.equals("success\n");
+        return compilationResult;
     }
 
     // Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh".
     // Returns true if compilation was successful, otherwise false.
-    public static boolean compileTestsCheck() throws IOException {
+    public static String compileTestsCheck() throws IOException {
         String compilationResult = runBashScript("compileTestsCheck.sh");
-        return compilationResult.equals("success\n");
+        return compilationResult;//Changed from success
     }
 
     // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
@@ -99,7 +99,7 @@ public class Functions {
     }
 
     // Takes a JSON String with github commit information from a github webhook.
-    // Extracts and returns the email of the committer. 
+    // Extracts and returns the email of the committer.
     public static String getEmail(String JSONstring) throws IOException {
         String email = "";
         String comStr = "\"committer\":{";
@@ -139,7 +139,7 @@ public class Functions {
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true"); 
+        properties.put("mail.smtp.starttls.enable", "true");
 
         // authenticate to gmail
         Session session = Session.getInstance(properties,
