@@ -57,26 +57,28 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String codeCompilationResult = Functions.compilationCheck();
         String testCompilationResult = Functions.compileTestsCheck();
         // Check if compilation of the server is successful.
-        if (codeCompilationResult == "\n") {
+        if (codeCompilationResult == "") {
             message.append("The code compilation worked!\n");
             System.out.println("Server compiled succesfully.");
         }
         else {
             //TODO: add compilation errors
             message.append(codeCompilationResult);
+            System.out.print(codeCompilationResult);
             System.out.println("Server compilation failed.");
         }
 
         // Check if tests compilation is successful.
-        if (testCompilationResult == "\n") {
+        if (testCompilationResult == "") {
             message.append("Tests compiled succesfully.\n");
             //If tests compile, run the tests and print the result.
             String testResults = Functions.runTests();
-            message.append(testResults+"\n");
             System.out.println(testResults);
+            message.append(testResults+"\n");
         }
         else {
             //TODO: Add test compilation issues to message.
+            System.out.println(testCompilationResult);
             message.append(testCompilationResult);
             System.out.println("Tests compilation failed.");
 
@@ -86,7 +88,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Add branch name of the commit to email message.
         message.append("Branch name of commit: " + branchName);
-
+        System.out.pringln(message.toString());
         Functions.sendFromServer(email,message.toString());
         response.getWriter().println("CI job done");
     }
