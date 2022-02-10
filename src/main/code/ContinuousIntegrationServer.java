@@ -56,7 +56,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Check if compilation of the server of the cloned repo is successful.
         if (Functions.compilationCheck()) {
-            Functions.sendFromServer("xxxxxxxx", "The code compilation worked!");
+            Functions.sendFromServer(email, "The code compilation worked!");
             System.out.println("Code compiled succesfully.");
         }
         else {

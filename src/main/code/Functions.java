@@ -113,10 +113,14 @@ public class Functions {
         return email;
     }
 
-    public static void sendFromServer(String recipient, String text) {
+    public static boolean sendFromServer(String recipient, String text) {
 
         String sender = "ciserverupdate@gmail.com";
         String password = "skickamail1!";
+
+        if(!(recipient.contains("@") && recipient.contains(".")) ){
+            return false;
+        }
 
         // setting up gmail smtp
         Properties properties = new Properties();
@@ -141,12 +145,11 @@ public class Functions {
             message.setText(text);
             Transport.send(message);
         }
-        catch (SendFailedException mex)
+        catch (MessagingException mex)
         {
             mex.printStackTrace();
-            System.out.println("not working");
-           // throws new MessagingException("Error");
-        }
 
+        }
+        return true;
     }
 }

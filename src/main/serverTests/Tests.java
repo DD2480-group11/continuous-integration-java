@@ -61,17 +61,21 @@ public class Tests {
     }
 
     @Test 
-    public void test_sendFromServer() throws MessagingException {
-        // Arrange: Send an email which does not have a correct structure
-        String falseEmail = "xxxxxxx";
+    public void test_sendFromServer1() throws IOException {
+        // Arrange: Add an invalid email as recipient
+        String email = "xxxxx";
 
-        try {
-            Functions.sendFromServer(falseEmail, "text");
-            fail("Expected email address to be invalid.");
-
-        } catch(MessagingException e) {
-            // pass
-         }
+        assertFalse(Functions.sendFromServer(email, "text"));
     }
+
+    @Test 
+    public void test_sendFromServer2() throws IOException {
+        // Arrange: Add an invalid email as recipient
+        String email = "xxxx@x";
+
+        assertFalse(Functions.sendFromServer(email, "text"));
+    }
+
+   
 
 }
