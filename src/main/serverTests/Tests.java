@@ -29,7 +29,7 @@ public class Tests {
 
         // Assert
         String expectedOutput = "testOutput\n";
-        assertFalse(actualOutput.equals(expectedOutput));
+        assertTrue(actualOutput.equals(expectedOutput));
     }
 
 
