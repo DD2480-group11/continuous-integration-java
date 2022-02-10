@@ -29,7 +29,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
     {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        baseRequest.setHandled(true); // TEST
+        baseRequest.setHandled(true);
 
         System.out.println(target);
 
