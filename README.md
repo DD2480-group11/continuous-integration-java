@@ -1,10 +1,10 @@
 # continuous-integration-java
 
-A continuous integration github-webhook-server written in java.
+A continuous integration github-webhook-server written in Java.
 
 ## How to start the server
 
-Navigate to the `src` folder. Make sure that the files `jetty-all-7.0.2.v20100331.jar` and `servlet-api-2.5.jar` are present in that folder. Then run the following commands:
+Navigate to the `src` folder. Make sure that the files `jetty-all-7.0.2.v20100331.jar` and `servlet-api-2.5.jar` are in that folder. Then run the following commands:
 ```
 JETTY_VERSION=7.0.2.v20100331
 javac -cp servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar "main/code/ContinuousIntegrationServer.java" "main/code/Functions.java"
@@ -15,19 +15,19 @@ The first command makes sure the correct version of Jetty is used. The second co
 
 ## How to get a public URL for your server
 
-Open another window and navigate to the src foler. Make sure the `ngrok` file is present there. Start ngrok with the following command.
+Open another window and navigate to the src foler. Make sure the `ngrok` file is in that folder. Start ngrok with the following command.
 
 ```
 ./ngrok http 8011
 ```
 
-Copy and paste the relevant URL to a JSON github webhook which activates on push events.
+Copy and paste the relevant public URL to a JSON github webhook which activates on push events.
 
 ## Tests
 
 ### How to run the tests
 
-Navigate to the `src` folder. Make sure you have the `junit.jar` and `hamcrest.jar` files in that folder.
+Navigate to the `src` folder. Make sure the `junit.jar` and `hamcrest.jar` files are in that folder.
 ```
 JETTY_VERSION=7.0.2.v20100331
 javac -cp ".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar" "main/serverTests/Tests.java"
