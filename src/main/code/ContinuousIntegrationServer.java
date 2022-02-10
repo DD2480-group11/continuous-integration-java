@@ -36,9 +36,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Extract the branch name of the github commit
         String JSONstring = Functions.JSONtoString(request);
 
-        System.out.println(JSONstring);
-
         String branchName = Functions.getBranchName(JSONstring);
+
+        String email = Functions.getEmail(JSONstring);
 
         // Delete the old cloned repo, and clone the branch of the new commit.
         Functions.deleteClonedRepo();
@@ -47,9 +47,11 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Check if compilation of the server of the cloned repo is successful.
         if (Functions.compilationCheck()) {
+            Functions.sendFromServer(email, "It worked")
             System.out.println("Code compiled succesfully.");
         }
         else {
+            Functions.sendFromServer(email, "It didn't work")
             System.out.println("Code compilation failed.");
         }
 
@@ -70,6 +72,5 @@ public class ContinuousIntegrationServer extends AbstractHandler
         server.setHandler(new ContinuousIntegrationServer());
         server.start();
         server.join();
-        System.out.println("Hej");
     }
 }
