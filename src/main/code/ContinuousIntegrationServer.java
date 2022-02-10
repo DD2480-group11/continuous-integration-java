@@ -35,6 +35,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Extract the branch name of the github commit
         String JSONstring = Functions.JSONtoString(request);
+
+        System.out.println(JSONstring);
+
         String branchName = Functions.getBranchName(JSONstring);
 
         // Delete the old cloned repo, and clone the branch of the new commit.
@@ -67,6 +70,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
         server.setHandler(new ContinuousIntegrationServer());
         server.start();
         server.join();
-        System.out.println("Hello");
+        System.out.println("Hej");
     }
 }
