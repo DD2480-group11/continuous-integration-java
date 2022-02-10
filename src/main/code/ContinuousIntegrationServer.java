@@ -53,15 +53,26 @@ public class ContinuousIntegrationServer extends AbstractHandler
         Functions.deleteClonedRepo();
         Functions.cloneBranch(branchName);
 
-
-        // Check if compilation of the server of the cloned repo is successful.
+        // Check if compilation of the server is successful.
         if (Functions.compilationCheck()) {
             Functions.sendFromServer(email, "The code compilation worked!");
-            System.out.println("Code compiled succesfully.");
+            System.out.println("Server compiled succesfully.");
         }
         else {
-            Functions.sendFromServer(email, "The code compilation didn't work.");
-            System.out.println("Code compilation failed.");
+            
+            System.out.println("Server compilation failed.");
+        }
+
+        // Check if tests compilation is successful.
+        if (Functions.compileTestsCheck()) {
+            System.out.println("Tests compiled succesfully.");
+            //If tests compile, run the tests and print the result.
+            String testResults = Functions.runTests();
+            System.out.println(testResults);
+        }
+        else {
+            System.out.println("Tests compilation failed.");
+
         }
 
         // --- FOR DEBUGGING PURPOSES ---

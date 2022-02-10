@@ -55,11 +55,22 @@ public class Functions {
         return runCommand("bash main/code/scripts/" + filename);
     }
 
-    // Tries to compile the cloned code, using the bash script "compilationCheck.sh".
+    // Tries to compile the server of the cloned repo, using the bash script "compilationCheck.sh".
     // Returns true if compilation was successful, otherwise false.
     public static boolean compilationCheck() throws IOException {
         String compilationResult = runBashScript("compilationCheck.sh");
         return compilationResult.equals("success\n");
+    }
+
+    // Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh".
+    // Returns true if compilation was successful, otherwise false.
+    public static boolean compileTestsCheck() throws IOException {
+        String compilationResult = runBashScript("compileTestsCheck.sh");
+        return compilationResult.equals("success\n");
+    }
+    //Runs the tests in main/serverTests.Tests.java and returns the result of those tests.
+    public static String runTests() throws IOException{
+        return runCommand("java -cp \".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar\" org.junit.runner.JUnitCore \"main.serverTests.Tests\"");
     }
 
     // Turns a JSON HttpServletRequest object into a String.
