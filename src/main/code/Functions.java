@@ -113,26 +113,6 @@ public class Functions {
         return email;
     }
 
-    // To read text from a txt file
-    static String readFile(String file){
-        StringBuilder data = new StringBuilder();
-        try{
-            URL path = SendEmail.class.getResource(file);
-            assert path != null;
-            File text = new File(path.getFile());
-            Scanner readText = new Scanner(text);
-            while (readText.hasNextLine()) {
-                data.append("\n").append(readText.nextLine());
-            }
-            readText.close();
-        } catch (
-                FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        return data.toString();
-    }
-
     static void sendFromServer(String recipient, String text){
 
         String sender = "ciserverupdate@gmail.com";
