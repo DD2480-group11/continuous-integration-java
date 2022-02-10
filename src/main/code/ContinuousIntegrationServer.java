@@ -21,7 +21,7 @@ import javax.mail.internet.MimeMessage;
 
 import java.util.stream.Collectors;
 import java.lang.StringBuilder;
-//test
+
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
