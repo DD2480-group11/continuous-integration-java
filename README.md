@@ -1,6 +1,6 @@
 # continuous-integration-java
 
-A continuous integration github-webhook-server written in Java.
+This is a continuous integration github-webhook-server, written in Java.
 
 ## How to start the server
 
