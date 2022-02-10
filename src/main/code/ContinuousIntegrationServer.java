@@ -54,22 +54,25 @@ public class ContinuousIntegrationServer extends AbstractHandler
         Functions.deleteClonedRepo();
         Functions.cloneBranch(branchName);
         StringBuilder message = new StringBuilder();
-        String codeCompilationResult = Functions.compilationCheck();
-        String testCompilationResult = Functions.compileTestsCheck();
+        boolean codeCompiled = Functions.compilationCheck()
+        //String codeCompilationResult = Functions.compilationCheck();
+        boolean  testsCompiled = Functions.compileTestsCheck();
+        //String testCompilationResult = Functions.compileTestsCheck();
         // Check if compilation of the server is successful.
-        if (codeCompilationResult == "") {
+        if (codeCompiled) {
             message.append("The code compilation worked!\n");
             System.out.println("Server compiled succesfully.");
         }
         else {
             //TODO: add compilation errors
-            message.append(codeCompilationResult);
-            System.out.print(codeCompilationResult);
+            //message.append(codeCompilationResult);
+            message.append("Server compilation failed.");
+            //System.out.print(codeCompilationResult);
             System.out.println("Server compilation failed.");
         }
 
         // Check if tests compilation is successful.
-        if (testCompilationResult == "") {
+        if (testsCompiled) {
             message.append("Tests compiled succesfully.\n");
             //If tests compile, run the tests and print the result.
             String testResults = Functions.runTests();
@@ -78,8 +81,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
         else {
             //TODO: Add test compilation issues to message.
-            System.out.println(testCompilationResult);
-            message.append(testCompilationResult);
+            //System.out.println(testCompilationResult);
+            //message.append(testCompilationResult);
+            message.append("Tests compilation failed.");
             System.out.println("Tests compilation failed.");
 
         }
