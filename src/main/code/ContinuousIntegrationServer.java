@@ -57,7 +57,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String codeCompilationResult = Functions.compilationCheck();
         String testCompilationResult = Functions.compileTestsCheck();
         // Check if compilation of the server is successful.
-        if (compilationResult == "\n") {
+        if (codeCompilationResult == "\n") {
             message.append("The code compilation worked!\n");
             System.out.println("Server compiled succesfully.");
         }
