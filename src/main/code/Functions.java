@@ -144,6 +144,7 @@ public class Functions {
         catch (MessagingException mex)
         {
             mex.printStackTrace();
+            System.out.println("not working");
            // throws new MessagingException("Error");
         }
 
