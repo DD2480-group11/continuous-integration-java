@@ -113,7 +113,7 @@ public class Functions {
         return email;
     }
 
-    static void sendFromServer(String recipient, String text){
+    public static void sendFromServer(String recipient, String text){
 
         String sender = "ciserverupdate@gmail.com";
         String password = "skickamail1!";
