@@ -11,8 +11,9 @@ javac -cp servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar "main/code/Continuous
 java -cp .:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar main.code.ContinuousIntegrationServer
 ```
 
-### TRYING
+### with mail stuff
 javac -cp servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar:javax.mail.jar:jakarta.activation.jar "main/code/ContinuousIntegrationServer.java" "main/code/Functions.java" "main/code/SendEmail.java"
+java -cp .:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar:javax.mail.jar:jakarta.activation.jar main.code.ContinuousIntegrationServer
 
 
 
