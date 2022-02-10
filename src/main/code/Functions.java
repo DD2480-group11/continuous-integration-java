@@ -97,8 +97,8 @@ public class Functions {
 
         while (c != '"') {
                 email += c;
-                c = restJSON.charAt(k);
                 k++;
+                c = restJSON.charAt(k);
         }
 
         return email;
