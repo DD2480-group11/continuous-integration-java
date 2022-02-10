@@ -69,7 +69,7 @@ public class Functions {
         return compilationResult.equals("success\n");
     }
 
-    // Runs the tests in main/serverTests.Tests.java and returns the result of those tests.
+    // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
     public static String runTests() throws IOException{
         return runCommand("java -cp \".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar\" org.junit.runner.JUnitCore \"main.serverTests.Tests\"");
     }
