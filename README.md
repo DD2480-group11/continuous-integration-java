@@ -1,6 +1,6 @@
 # continuous-integration-java
 
-A continuous integration github-webhook-server written in Java.
+This is a continuous integration github-webhook-server, written in Java. 
 
 ## How to start the server
 
@@ -21,7 +21,7 @@ Open another window and navigate to the src foler. Make sure the `ngrok` file is
 ./ngrok http 8011
 ```
 
-Copy and paste the relevant public URL to a JSON github webhook which activates on push events.
+Copy and paste the relevant public URL to a JSON github webhook which activates on push events. 
 
 ## Tests
 
