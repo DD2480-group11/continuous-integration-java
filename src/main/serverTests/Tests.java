@@ -67,13 +67,11 @@ public class Tests {
 
         try {
             Functions.sendFromServer(falseEmail, "text");
-            fail("MessagingException: Invalid email address.");
-            
+            fail("Expected the email address to be invalid.");
+
         } catch(MessagingException e) {
-            throw new  MessagingException("Error");
-            }
             // pass
-        
+         }
     }
 
 }

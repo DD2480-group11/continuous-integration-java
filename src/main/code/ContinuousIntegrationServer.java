@@ -39,7 +39,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String branchName = Functions.getBranchName(JSONstring);
 
         String email = Functions.getEmail(JSONstring);
-        System.out.println(email);
 
         // Delete the old cloned repo, and clone the branch of the new commit.
         Functions.deleteClonedRepo();

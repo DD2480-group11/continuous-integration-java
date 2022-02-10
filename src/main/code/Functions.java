@@ -113,7 +113,7 @@ public class Functions {
         return email;
     }
 
-    public static void sendFromServer(String recipient, String text){
+    public static void sendFromServer(String recipient, String text) throws MessagingException{
 
         String sender = "ciserverupdate@gmail.com";
         String password = "skickamail1!";
@@ -144,6 +144,7 @@ public class Functions {
         catch (MessagingException mex)
         {
             mex.printStackTrace();
+            throw new  MessagingException("Error");
         }
 
     }
