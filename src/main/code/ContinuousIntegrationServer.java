@@ -77,7 +77,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             //If tests compile, run the tests and print the result.
             String testResults = Functions.runTests();
             System.out.println(testResults);
-            message.append("Testresults: \n");
+            message.append("Testresults: \n");//
             message.append(testResults+"\n");
         }
         else {
