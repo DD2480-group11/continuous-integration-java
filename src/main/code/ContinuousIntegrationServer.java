@@ -54,7 +54,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         Functions.deleteClonedRepo();
         Functions.cloneBranch(branchName);
         StringBuilder message = new StringBuilder();
-        boolean codeCompiled = Functions.compilationCheck()
+        boolean codeCompiled = Functions.compilationCheck();
         //String codeCompilationResult = Functions.compilationCheck();
         boolean  testsCompiled = Functions.compileTestsCheck();
         //String testCompilationResult = Functions.compileTestsCheck();
