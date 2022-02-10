@@ -52,6 +52,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Check if tests compilation is successful.
         if (Functions.compileTestsCheck()) {
             System.out.println("Tests compiled succesfully.");
+            //If tests compile, run the tests and print the result.
+            String testResults = Functions.runTests();
+            System.out.println(testResults);
         }
         else {
             System.out.println("Tests compilation failed.");

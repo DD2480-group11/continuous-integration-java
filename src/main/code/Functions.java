@@ -59,6 +59,10 @@ public class Functions {
         String compilationResult = runBashScript("compileTestsCheck.sh");
         return compilationResult.equals("success\n");
     }
+    //Runs the tests in main/serverTests.Tests.java and returns the result of those tests.
+    public static String runTests() throws IOException{
+        return runCommand("java -cp \".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar\" org.junit.runner.JUnitCore \"main.serverTests.Tests\"");
+    }
 
     // Turns a JSON HttpServletRequest object into a String.
     public static String JSONtoString(HttpServletRequest request) throws IOException {
