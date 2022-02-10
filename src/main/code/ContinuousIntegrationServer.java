@@ -66,7 +66,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         else {
             //TODO: add compilation errors
             //message.append(codeCompilationResult);
-            message.append("Server compilation failed.");
+            message.append("Code compilation failed.");
             //System.out.print(codeCompilationResult);
             System.out.println("Server compilation failed.");
         }
@@ -77,6 +77,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             //If tests compile, run the tests and print the result.
             String testResults = Functions.runTests();
             System.out.println(testResults);
+            message.append("Testresults: \n");
             message.append(testResults+"\n");
         }
         else {
