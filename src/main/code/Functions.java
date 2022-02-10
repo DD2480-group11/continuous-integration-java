@@ -60,6 +60,10 @@ public class Functions {
         return compilationResult.equals("success\n");
     }
 
+    public static String runTests() throws IOException{
+        return runCommand("java -cp \".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar\" org.junit.runner.JUnitCore \"main.serverTests.Tests\"");
+    }
+
     // Turns a JSON HttpServletRequest object into a String.
     public static String JSONtoString(HttpServletRequest request) throws IOException {
         return request.getReader().lines().collect(Collectors.joining());
