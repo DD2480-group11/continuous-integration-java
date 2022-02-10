@@ -62,7 +62,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             System.out.println("Server compiled succesfully.");
         }
         else {
-            //TODO: add compilation errors 
+            //TODO: add compilation errors
             message.append(codeCompilationResult);
             System.out.println("Server compilation failed.");
         }
@@ -87,7 +87,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Add branch name of the commit to email message.
         message.append("Branch name of commit: " + branchName);
 
-        Functions.sendFromServer(email,message);
+        Functions.sendFromServer(email,message.toString());
         response.getWriter().println("CI job done");
     }
 
