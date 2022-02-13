@@ -53,7 +53,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             handleNewCommit(target, baseRequest, request, response, JSONstring);
         }
     }
-
+    
     // This function is called when someone visits the public forwarding URL specified by ngrok
     // (e.g. http://d47a-92-34-27-8.ngrok.io)
     public void handleWebsiteVisit(String target,
