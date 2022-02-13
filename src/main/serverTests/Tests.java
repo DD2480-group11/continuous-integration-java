@@ -17,7 +17,6 @@ import java.beans.Transient;
 import main.code.*;
 
 import java.io.IOException;
-import java.io.File;
 
 // This class includes tests for various functions.
 public class Tests {
@@ -75,7 +74,4 @@ public class Tests {
 
         assertFalse(Functions.sendFromServer(email, "text"));
     }
-
-
-
 }
