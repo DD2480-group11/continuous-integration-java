@@ -40,21 +40,20 @@ public class ContinuousIntegrationServer extends AbstractHandler
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
-        System.out.println(target);
 
         // Convert the JSON payload into a String
-        String JSONstring = Functions.JSONtoString(request);
-        System.out.println(JSONstring);
+         String JSONstring = Functions.JSONtoString(request);
+        // System.out.println(">" + JSONstring + "<");
 
         // Depending on what request has come in, call different functions
-        if (JSONstring.equals("/favicon.ico")) {
+        if (JSONstring.equals("")) {
             handleWebsiteVisit(target, baseRequest, request, response, JSONstring);
         }
         else {
             handleNewCommit(target, baseRequest, request, response, JSONstring);
         }
     }
-
+    
     // This function is called when someone visits the public forwarding URL specified by ngrok
     // (e.g. http://d47a-92-34-27-8.ngrok.io)
     public void handleWebsiteVisit(String target,
