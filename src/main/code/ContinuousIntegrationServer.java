@@ -46,64 +46,12 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String JSONstring = Functions.JSONtoString(request);
 
         // Depending on what request has come in, call different functions
-        if (!JSONstring.equals("/favicon.ico")) {
-            handleWebsiteVisit(target, baseRequest, request, response, JSONstring);
-        }
-        else {
-            // Extract branch name and email from webhook message
-        String branchName = Functions.getBranchName(JSONstring);
-        String email = Functions.getEmail(JSONstring);
-
-        // Delete the old cloned repo, and clone the branch of the new commit.
-        Functions.deleteClonedRepo();
-        Functions.cloneBranch(branchName);
-
-        // Construct the email with compilation and test results
-        StringBuilder message = new StringBuilder();
-        boolean codeCompiled = Functions.compilationCheck();
-        //String codeCompilationResult = Functions.compilationCheck();
-        boolean  testsCompiled = Functions.compileTestsCheck();
-        //String testCompilationResult = Functions.compileTestsCheck();
-
-        // Check if compilation of the server is successful
-        if (codeCompiled) {
-            message.append("Code compiled succesfully\n");
-            System.out.println("Server compiled succesfully.");
-        }
-        else {
-            //TODO: add compilation errors
-            //message.append(codeCompilationResult);
-            message.append("Code compilation failed.");
-            //System.out.print(codeCompilationResult);
-            System.out.println("Server compilation failed.");
-        }
-
-        // Check if tests compilation is successful.
-        if (testsCompiled) {
-            message.append("Tests compiled succesfully.\n");
-            //If tests compile, run the tests and print the result.
-            String testResults = Functions.runTests();
-            System.out.println(testResults);
-            message.append("Testresults: \n");//
-            message.append(testResults+"\n");
-        }
-        else {
-            //TODO: Add test compilation issues to message.
-            //System.out.println(testCompilationResult);
-            //message.append(testCompilationResult);
-            message.append("Tests compilation failed.");
-            System.out.println("Tests compilation failed.");
-
-        }
-
-        // --- FOR DEBUGGING PURPOSES ---
-
-        // Add branch name of the commit to email message.
-        message.append("Branch name of commit: " + branchName);
-        System.out.println(message.toString());
-        Functions.sendFromServer(email,message.toString());
-        response.getWriter().println("CI job done");
-        }
+        //if (!JSONstring.equals("/favicon.ico")) {
+        //    handleWebsiteVisit(target, baseRequest, request, response, JSONstring);
+        //}
+       // else {
+            handleNewCommit(target, baseRequest, request, response, JSONstring);
+        //}
     }
 
     // This function is called when someone visits the public forwarding URL specified by ngrok
