@@ -44,14 +44,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Convert the JSON payload into a String
         String JSONstring = Functions.JSONtoString(request);
+        System.out.println(JSONstring);
 
         // Depending on what request has come in, call different functions
-        //if (!JSONstring.equals("/favicon.ico")) {
-        //    handleWebsiteVisit(target, baseRequest, request, response, JSONstring);
-        //}
-       // else {
+        if (JSONstring.equals("/favicon.ico")) {
+            handleWebsiteVisit(target, baseRequest, request, response, JSONstring);
+        }
+        else {
             handleNewCommit(target, baseRequest, request, response, JSONstring);
-        //}
+        }
     }
 
     // This function is called when someone visits the public forwarding URL specified by ngrok
