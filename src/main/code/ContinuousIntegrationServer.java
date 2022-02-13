@@ -40,14 +40,13 @@ public class ContinuousIntegrationServer extends AbstractHandler
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
-        System.out.println(target);
 
         // Convert the JSON payload into a String
-        String JSONstring = Functions.JSONtoString(request);
-        System.out.println(JSONstring);
+         String JSONstring = Functions.JSONtoString(request);
+        // System.out.println(">" + JSONstring + "<");
 
         // Depending on what request has come in, call different functions
-        if (JSONstring.equals("/favicon.ico")) {
+        if (JSONstring.equals("")) {
             handleWebsiteVisit(target, baseRequest, request, response, JSONstring);
         }
         else {
