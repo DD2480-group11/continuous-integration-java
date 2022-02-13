@@ -44,7 +44,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Convert the JSON payload into a String
         String JSONstring = Functions.JSONtoString(request);
-        System.out.println(JSONstring);
 
         // Depending on what request has come in, call different functions
         if (!JSONstring.equals("/favicon.ico")) {
@@ -62,6 +61,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    String JSONstring)
+        throws IOException, ServletException 
     {
         response.getWriter().println("Later, this page will have info about previous builds");
     }
@@ -87,7 +87,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         //String codeCompilationResult = Functions.compilationCheck();
         boolean  testsCompiled = Functions.compileTestsCheck();
         //String testCompilationResult = Functions.compileTestsCheck();
-        
+
         // Check if compilation of the server is successful
         if (codeCompiled) {
             message.append("Code compiled succesfully\n");
