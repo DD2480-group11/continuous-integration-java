@@ -74,4 +74,12 @@ public class Tests {
 
         assertFalse(Functions.sendFromServer(email, "text"));
     }
+
+    @Test
+    public void test_readAndWriteToFile() throws IOException {
+        String contents = "some text";
+        Functions.writeToFile("main/serverTests/testFile.txt", contents);
+        String textReadFromFile = Functions.readFile("main/serverTests/testFile.txt");
+        assertTrue(textReadFromFile.equals(contents));
+    }
 }

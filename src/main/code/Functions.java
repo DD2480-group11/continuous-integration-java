@@ -19,9 +19,12 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-
-
 import java.util.stream.Collectors;
+
+import java.util.Formatter;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 public class Functions {
     // Runs command and returns the output as a String.
@@ -166,4 +169,39 @@ public class Functions {
         }
         return true;
     }
+
+    /**
+     * Creates a file, and writes a String to it.
+     * If file already exists then it will be overwritten.
+     * @param fileName the name of the file to write to
+     * @param text the string to write to file
+     */
+    public static void writeToFile(String fileName, String text){ 
+        Formatter formatter;
+        try {
+            formatter = new Formatter(fileName);  
+            formatter.format("%s", text);
+            formatter.close();
+        }
+        catch(Exception e) {     
+            System.out.println("Error: file could not be created or written to.");
+        }
+    }
+
+    /**
+     * Reads a file and returns contents as a String.
+     * @param fileName the file to read
+     * @return the contents of the file
+     */
+    public static String readFile(String fileName) {
+        String content = "";
+        try {
+            content = new String(Files.readAllBytes(Paths.get(fileName)));
+        }
+        catch (Exception e) {
+            System.out.println("Error: could not read file " + fileName);
+        }
+        return content;
+    }
 }
+

@@ -24,3 +24,4 @@ hs_err_pid*
 # specific for this repo
 ngrok
 continuous-integration-java
+src/main/serverTests/testFile.txt
