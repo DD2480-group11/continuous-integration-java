@@ -1,0 +1,2 @@
+Code compiled succesfully
+Tests compilation failed.Branch name of commit: mainCommit hash: 874947d7fa7afa1224a6cebf69fccd7828ba7ae6

@@ -63,7 +63,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                    String JSONstring)
         throws IOException, ServletException 
     {
-        response.getWriter().println("Later, this page will have info about previous builds");
+        String HTML = "<html>\n " +
+        "<head>\n " +
+        "    <title> My Website </title>\n " +
+            "</head>\n " +
+        "<body>\n " +
+        "text\n " +
+        "</body>\n " +
+        "</html>";
+        response.getWriter().println(HTML);
     }
 
     public void handleNewCommit(String target,
@@ -73,59 +81,77 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                 String JSONstring)
         throws IOException, ServletException 
     {
-        // Extract branch name and email from webhook message
+        // Extract branch name, email and commitHash from webhook message
         String branchName = Functions.getBranchName(JSONstring);
         String email = Functions.getEmail(JSONstring);
+        String commitHash = Functions.getCommitHash(JSONstring);
 
-        // Delete the old cloned repo, and clone the branch of the new commit.
-        Functions.deleteClonedRepo();
-        Functions.cloneBranch(branchName);
+        if (!commitHash.equals("0000000000000000000000000000000000000000")) {
+            // Delete the old cloned repo, and clone the branch of the new commit.
+            Functions.deleteClonedRepo();
+            Functions.cloneBranch(branchName);
 
-        // Construct the email with compilation and test results
-        StringBuilder message = new StringBuilder();
-        boolean codeCompiled = Functions.compilationCheck();
-        //String codeCompilationResult = Functions.compilationCheck();
-        boolean  testsCompiled = Functions.compileTestsCheck();
-        //String testCompilationResult = Functions.compileTestsCheck();
+            // Construct the email with compilation and test results
+            StringBuilder message = new StringBuilder();
+            boolean codeCompiled = Functions.compilationCheck();
+            //String codeCompilationResult = Functions.compilationCheck();
+            boolean  testsCompiled = Functions.compileTestsCheck();
+            //String testCompilationResult = Functions.compileTestsCheck();
 
-        // Check if compilation of the server is successful
-        if (codeCompiled) {
-            message.append("Code compiled succesfully\n");
-            System.out.println("Server compiled succesfully.");
+            // Check if compilation of the server is successful
+            if (codeCompiled) {
+                message.append("Code compiled succesfully\n");
+                System.out.println("Server compiled succesfully.");
+            }
+            else {
+                //TODO: add compilation errors
+                //message.append(codeCompilationResult);
+                message.append("Code compilation failed.");
+                //System.out.print(codeCompilationResult);
+                System.out.println("Server compilation failed.");
+            }
+
+            // Check if tests compilation is successful.
+            if (testsCompiled) {
+                message.append("Tests compiled succesfully.\n");
+                //If tests compile, run the tests and print the result.
+                String testResults = Functions.runTests();
+                System.out.println(testResults);
+                message.append("Testresults: \n");//
+                message.append(testResults+"\n");
+            }
+            else {
+                //TODO: Add test compilation issues to message.
+                //System.out.println(testCompilationResult);
+                //message.append(testCompilationResult);
+                message.append("Tests compilation failed.");
+                System.out.println("Tests compilation failed.");
+
+            }
+
+            // Add branch name of the commit to email message.
+            message.append("Branch name of commit: " + branchName);
+
+            // Add commit hash to email message.
+            message.append("\nCommit hash: " + commitHash);
+
+            // Convert test results to String
+            String messageStr = message.toString();
+
+            // --- Test results message has now been finalized, and can be communicated on neccesary channels ---
+
+            // Print test results to terminal
+            System.out.println(messageStr);
+
+            // Send test results to commiter via email
+            Functions.sendFromServer(email, messageStr);
+
+            // Add test results to a new file
+            Functions.writeToFile("main/builds/" + commitHash + ".txt", messageStr);
+
+            // Response to github webhook (and shown on localhost webpage)
+            response.getWriter().println("CI job done");
         }
-        else {
-            //TODO: add compilation errors
-            //message.append(codeCompilationResult);
-            message.append("Code compilation failed.");
-            //System.out.print(codeCompilationResult);
-            System.out.println("Server compilation failed.");
-        }
-
-        // Check if tests compilation is successful.
-        if (testsCompiled) {
-            message.append("Tests compiled succesfully.\n");
-            //If tests compile, run the tests and print the result.
-            String testResults = Functions.runTests();
-            System.out.println(testResults);
-            message.append("Testresults: \n");//
-            message.append(testResults+"\n");
-        }
-        else {
-            //TODO: Add test compilation issues to message.
-            //System.out.println(testCompilationResult);
-            //message.append(testCompilationResult);
-            message.append("Tests compilation failed.");
-            System.out.println("Tests compilation failed.");
-
-        }
-
-        // --- FOR DEBUGGING PURPOSES ---
-
-        // Add branch name of the commit to email message.
-        message.append("Branch name of commit: " + branchName);
-        System.out.println(message.toString());
-        Functions.sendFromServer(email,message.toString());
-        response.getWriter().println("CI job done");
     }
 
     // used to start the CI server in command line
