@@ -77,9 +77,22 @@ public class Tests {
 
     @Test
     public void test_readAndWriteToFile() throws IOException {
-        String contents = "some text";
-        Functions.writeToFile("main/serverTests/testFile.txt", contents);
-        String textReadFromFile = Functions.readFile("main/serverTests/testFile.txt");
-        assertTrue(textReadFromFile.equals(contents));
+        Functions.writeToFile("main/serverTests/testFile.txt", "some text");
+
+        String actual = Functions.readFile("main/serverTests/testFile.txt");
+        String expected = "some text";
+
+        assertTrue(actual.equals(expected));
+    }
+
+    @Test
+    public void test_appendToFile() throws IOException {
+        Functions.writeToFile("main/serverTests/testFile.txt", "some text");
+        Functions.appendToFile("main/serverTests/testFile.txt", " and some more");
+
+        String actual = Functions.readFile("main/serverTests/testFile.txt");
+        String expected = "some text and some more";
+        
+        assertTrue(actual.equals(expected));
     }
 }

@@ -203,5 +203,18 @@ public class Functions {
         }
         return content;
     }
+
+    /**
+     * Adds text to a file, if it already exists.
+     * @param fileName file to add text to
+     * @param text the text you want to add to the file
+     */
+    public static void appendToFile(String fileName, String text) {
+        try {
+            Files.write(Paths.get(fileName), text.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            System.out.println("Error: the file " + fileName + " does not exist.");
+        }
+    }
 }
 
