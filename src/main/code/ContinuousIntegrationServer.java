@@ -63,7 +63,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                    String JSONstring)
         throws IOException, ServletException 
     {
-        response.getWriter().println("Later, this page will have info about previous builds");
+        String HTML = "<html>\n " +
+        "<head>\n " +
+        "    <title> My Website </title>\n " +
+            "</head>\n " +
+        "<body>\n " +
+        "text\n " +
+        "</body>\n " +
+        "</html>";
+        response.getWriter().println(HTML);
     }
 
     public void handleNewCommit(String target,
@@ -73,9 +81,10 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                 String JSONstring)
         throws IOException, ServletException 
     {
-        // Extract branch name and email from webhook message
+        // Extract branch name, email and commitHash from webhook message
         String branchName = Functions.getBranchName(JSONstring);
         String email = Functions.getEmail(JSONstring);
+        String commitHash = Functions.getCommitHash(JSONstring);
 
         // Delete the old cloned repo, and clone the branch of the new commit.
         Functions.deleteClonedRepo();
@@ -119,12 +128,27 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         }
 
-        // --- FOR DEBUGGING PURPOSES ---
-
         // Add branch name of the commit to email message.
         message.append("Branch name of commit: " + branchName);
-        System.out.println(message.toString());
-        Functions.sendFromServer(email,message.toString());
+
+        // Add commit hash to email message.
+        message.append("\nCommit hash: " + commitHash);
+
+        // Convert test results to String
+        String messageStr = message.toString();
+
+        // --- Test results message has now been finalized, and can be communicated on neccesary channels ---
+
+        // Print test results to terminal
+        System.out.println(messageStr);
+
+        // Send test results to commiter via email
+        Functions.sendFromServer(email, messageStr);
+
+        // Add test results to a new file
+        Functions.writeToFile("main/builds/" + commitHash + ".txt", messageStr);
+
+        // Response to github webhook (and shown on localhost webpage)
         response.getWriter().println("CI job done");
     }
 
