@@ -132,7 +132,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         message.append("Branch name of commit: " + branchName);
 
         // Add commit hash to email message.
-        message.append("Commit hash: " + commitHash);
+        message.append("\nCommit hash: " + commitHash);
 
         // Convert test results to String
         String messageStr = message.toString();
