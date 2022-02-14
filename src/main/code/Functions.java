@@ -130,6 +130,35 @@ public class Functions {
         return email;
     }
 
+    /**
+     * Takes a JSON String with github commit information from a github webhook.
+     * Extracts and returns the commit hash of the committer.
+     * @param JSONstring the String containg the JSON info
+     * @return the commit hash of the commit
+     * @throws IOException
+     */
+    public static String getCommitHash(String JSONstring) throws IOException {
+        String commitHash = "";
+
+        // Get index of "after" section, where the hash is located
+        String afterStr = "\"after\":\"";
+        int i = JSONstring.indexOf(afterStr);
+
+        // Get index where the actual hash code starts
+        i += afterStr.length();
+        char c = JSONstring.charAt(i);
+
+        // Extract all the chars from the hash
+        while (c != '"') {
+                commitHash += c;
+                i++;
+                c = JSONstring.charAt(i);
+        }
+
+        return commitHash;
+    }
+
+
     public static boolean sendFromServer(String recipient, String text) {
 
         String sender = "ciserverupdate@gmail.com";

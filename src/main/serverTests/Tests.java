@@ -46,6 +46,19 @@ public class Tests {
     }
 
     @Test
+    public void test_getCommitHash() throws IOException {
+        // Arrange
+        String JSONstring = "{\"ref\":\"refs/heads/someBranchName\",\"before\":\"c747cb43fd0c8564151dc4d1bdbaf7a37cde2638\",\"after\":\"9c9ebf3cd4262d2de0d94f73e4bb4ea0ecf7d228\",\"repository\": {}\"";
+
+        // Act
+        String extractedCommitHash = Functions.getCommitHash(JSONstring);
+
+        // Assert
+        String expectedCommitHash = "9c9ebf3cd4262d2de0d94f73e4bb4ea0ecf7d228";
+        assertTrue(extractedCommitHash.equals(expectedCommitHash));
+    }
+
+    @Test
     public void test_cloneBranch() throws IOException {
         // Arrange: Delete the old cloned repo
         Functions.deleteClonedRepo();
