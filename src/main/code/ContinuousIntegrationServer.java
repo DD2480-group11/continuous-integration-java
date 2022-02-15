@@ -12,6 +12,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Scanner;
@@ -54,8 +55,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
     }
 
-    // This function is called when someone visits the public forwarding URL specified by ngrok
-    // (e.g. http://d47a-92-34-27-8.ngrok.io)
+
+    // This function is called when someone visits the page localhost:8011, when the server is running.
     public void handleWebsiteVisit(String target,
                                    Request baseRequest,
                                    HttpServletRequest request,
@@ -63,15 +64,14 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                    String JSONstring)
         throws IOException, ServletException
     {
-        String HTML = "<html>\n " +
-        "<head>\n " +
-        "    <title> My Website </title>\n " +
-            "</head>\n " +
-        "<body>\n " +
-        "text\n " +
-        "</body>\n " +
-        "</html>";
+
+        // Print HTML with links to all builds
+        String HTML = Functions.getLinksToBuildsHTML();
         response.getWriter().println(HTML);
+
+        // If a link to a build is clicked; process the request and showcase the correct build info.
+        String requestedURL = request.getRequestURL().toString();
+        Functions.processURLrequest(requestedURL, response);
     }
 
     public void handleNewCommit(String target,
@@ -85,6 +85,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String branchName = Functions.getBranchName(JSONstring);
         String email = Functions.getEmail(JSONstring);
         String commitHash = Functions.getCommitHash(JSONstring);
+        String commitTimestamp = Functions.getCommitTimestamp(JSONstring);
 
         if (!commitHash.equals("0000000000000000000000000000000000000000")) {
             // Delete the old cloned repo, and clone the branch of the new commit.
@@ -97,27 +98,35 @@ public class ContinuousIntegrationServer extends AbstractHandler
             //String codeCompilationResult = Functions.compilationCheck();
             boolean  testsCompiled = Functions.compileTestsCheck();
             //String testCompilationResult = Functions.compileTestsCheck();
+            boolean testsPassed = true;
 
+            message.append("--- Test summary --- \n");//
             // Check if compilation of the server is successful
             if (codeCompiled) {
                 message.append("Code compiled succesfully\n");
-                System.out.println("Server compiled succesfully.");
             }
             else {
                 //TODO: add compilation errors
                 //message.append(codeCompilationResult);
                 message.append("Code compilation failed.");
                 //System.out.print(codeCompilationResult);
-                System.out.println("Server compilation failed.");
             }
 
             // Check if tests compilation is successful.
             if (testsCompiled) {
                 message.append("Tests compiled succesfully.\n");
-                //If tests compile, run the tests and print the result.
+
+                //If tests compile, run the tests.
                 String testResults = Functions.runTests("runTests.sh");
-                System.out.println(testResults);
-                message.append("Testresults: \n");//
+                //Tests failed
+                if(testResults.contains("Failures: ")){
+                    testsPassed = false;
+                    message.append("Tests failed.\n");
+                }//Tests passed
+                else{
+                    message.append("Tests passed.\n");
+                }
+                message.append("\n--- Specific test info --- \n");//
                 message.append(testResults+"\n");
             }
             else {
@@ -125,31 +134,32 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 //System.out.println(testCompilationResult);
                 //message.append(testCompilationResult);
                 message.append("Tests compilation failed.");
-                System.out.println("Tests compilation failed.");
 
             }
 
-            // Add branch name of the commit to email message.
-            message.append("Branch name of commit: " + branchName);
-
-            // Add commit hash to email message.
-            message.append("\nCommit hash: " + commitHash);
+            // Add branch name, timestamp, and commit hash to the test results message.
+            message.append("--- Commit specifics ---");
+            message.append("\nBranch name:\t" + branchName);
+            message.append("\nTimestamp:\t" + commitTimestamp);
+            message.append("\nHash:\t\t" + commitHash);
 
             // Convert test results to String
             String messageStr = message.toString();
 
-            // --- Test results message has now been finalized, and can be communicated on neccesary channels ---
+            //Construct buildresult based on if code and tests compiled and if tests passed.
+            String buildResult = "";
+            if(codeCompiled && testsCompiled && testsPassed){
+                buildResult = "Build successful";
+            }else{
+                buildResult = "Build failed";
+            }
 
-            // Print test results to terminal
+            // The test results will be printed to terminal, sent via email to commiter, and written to a build file.
             System.out.println(messageStr);
+            Functions.sendFromServer(email, buildResult, messageStr);
+            Functions.writeToFile("main/builds/" + commitTimestamp + commitHash + ".txt", messageStr);
 
-            // Send test results to commiter via email
-            Functions.sendFromServer(email, messageStr);
-
-            // Add test results to a new file
-            Functions.writeToFile("main/builds/" + commitHash + ".txt", messageStr);
-
-            // Response to github webhook (and shown on localhost webpage)
+            // Repond to github webhook.
             response.getWriter().println("CI job done");
         }
     }
@@ -158,6 +168,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
     public static void main(String[] args) throws Exception
     {
         Server server = new Server(8011);
+
         server.setHandler(new ContinuousIntegrationServer());
         server.start();
         server.join();

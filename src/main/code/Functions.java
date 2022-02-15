@@ -12,6 +12,9 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Scanner;
@@ -74,34 +77,11 @@ public class Functions {
          return compilationResult.equals("success\n");//
     }
 
-    // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
+    // Runs the tests specified in the input script and returns the result of those tests.
     public static String runTests(String script) throws IOException{
         return runBashScript(script);
     }
-
-    public static String runBashScript2(String filename) throws IOException {
-        return runCommand2("bash main/code/scripts/" + filename);
-    }
-
-    public static String runCommand2(String command) throws IOException {
-        ProcessBuilder pb = new ProcessBuilder();
-	    pb.command("bash", "-c", command);
-        Process process = pb.start();
-
-        String result = new String(process.getInputStream().readAllBytes());
-        long time = 10;
-        try{
-            process.waitFor(time, TimeUnit.MILLISECONDS);
-        }catch(InterruptedException e){
-
-        }
-
-        String exitCode = Integer.toString(process.exitValue());
-        return result; //+ exitCode;
-    }
-
-    //java -cp ".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar" org.junit.runner.JUnitCore "continuous-integration-java.src.main.serverTests.Tests"
-
+  
     // Turns a JSON HttpServletRequest object into a String.
     public static String JSONtoString(HttpServletRequest request) throws IOException {
         return request.getReader().lines().collect(Collectors.joining());
@@ -173,16 +153,46 @@ public class Functions {
 
         // Extract all the chars from the hash
         while (c != '"') {
-                commitHash += c;
-                i++;
-                c = JSONstring.charAt(i);
+            commitHash += c;
+            i++;
+            c = JSONstring.charAt(i);
         }
 
         return commitHash;
     }
 
+        /**
+     *
+     * @param JSONstring
+     * @return
+     * @throws IOException
+     */
+    public static String getCommitTimestamp(String JSONstring) throws IOException {
+        String timestamp = "";
 
-    public static boolean sendFromServer(String recipient, String text) {
+        // Get index of "after" section, where the hash is located
+        String timestampStr = "\"timestamp\":\"";
+        int i = JSONstring.indexOf(timestampStr);
+        // "after": "bd58a21891ad0ce4f3cc1f303b32383f654cb7b3",
+        // "timestamp": "2022-02-15T15:53:54+01:00",
+
+
+        // Get index where the actual hash code starts
+        i += timestampStr.length();
+        char c = JSONstring.charAt(i);
+
+        // Extract all the chars from the hash
+        while (c != '"') {
+            timestamp += c;
+            i++;
+            c = JSONstring.charAt(i);
+        }
+
+        return timestamp;
+    }
+
+
+    public static boolean sendFromServer(String recipient,String subject, String text) {
 
         String sender = "ciserverupdate@gmail.com";
         String password = "skickamail1!";
@@ -206,7 +216,7 @@ public class Functions {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(sender));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-            message.setSubject("Result from CI Server");
+            message.setSubject("Result: " + subject);
             message.setText(text);
             Transport.send(message);
             return true;
@@ -225,6 +235,9 @@ public class Functions {
      * @param text the string to write to file
      */
     public static void writeToFile(String fileName, String text){
+        // Colons are not allowed in filenames. Replace with semi colons.
+        fileName = fileName.replace(":", ";");
+
         Formatter formatter;
         try {
             formatter = new Formatter(fileName);
@@ -253,6 +266,52 @@ public class Functions {
     }
 
     /**
+     * Prints the contents of a file to the web page that the printwriter object is writing to, in HTML format.
+     * @param fileName file to print
+     * @param title the title the web tab should have
+     * @param pw the PrintWriter object that is printing to the web page
+     * @param response the HttpServletResponse object which is printing to the webpage (used to clear the page).
+     */
+    public static void printFileToPage(String fileName, String title, PrintWriter pw, HttpServletResponse response) {
+        clearPage(response);
+
+        String HTML = String.join("\n",
+            "<html>",
+                "<head>",
+                    "<title> " + title + " </title>",
+                "</head>",
+                "<body>",
+                "<p> <a href=\"http://localhost:8011\">Go to build list</a> </p>"
+        );
+
+        try {
+            File myObj = new File(fileName);
+            Scanner sc = new Scanner(myObj);
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                HTML += "<p>" + line + "</p>";
+            }
+            sc.close();
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        HTML += "</body> </html>";
+
+        pw.println(HTML);
+    }
+
+    /**
+     * Clears the web page that is being printed to
+     * @param response the HttpServletResponse object which is printing to the webpage.
+     */
+    public static void clearPage(HttpServletResponse response) {
+        response.resetBuffer();
+    }
+
+    /**
      * Adds text to a file, if it already exists.
      * @param fileName file to add text to
      * @param text the text you want to add to the file
@@ -262,6 +321,57 @@ public class Functions {
             Files.write(Paths.get(fileName), text.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             System.out.println("Error: the file " + fileName + " does not exist.");
+        }
+    }
+
+    /**
+     * Returns a String in HTML format, which includes links to each individual commit.
+     * @return String String in HTML format, which includes links to each individual commit.
+     */
+    public static String getLinksToBuildsHTML() {
+        String HTML = "<html> <head> <title> Builds </title> </head> <body>";
+
+        HTML += "<h1> Build links </h1>";
+        HTML += "<p> The builds are sorted by their commit timestamps, with the most recent one at the top. </p>";
+        HTML += "<p> Each file name is a combination of a timestamp and commit hash. </p>";
+
+        // Make an array, where each element is one file with build info.
+        File folder = new File("main/builds");
+        File[] listOfFiles = folder.listFiles();
+
+        // Add one link for each file with build info.
+        for (int i = listOfFiles.length - 1; i > -1; i--) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                HTML += "<p> <a href=\"./main/builds/" + fileName + "\">" + fileName + "</a> </p>";
+            }
+        }
+
+        HTML += "</body> </html>";
+        return HTML;
+    }
+
+    /**
+     * Processes the requested URL to a specific build.
+     * Prints a web page in HTML format, with tests result for that specific build.
+     * @param requestedURL the request URL
+     * @param response the HttpServletResponse which can write to the page
+     * @throws IOException if an exception is thrown when trying to write to the page
+     */
+    public static void processURLrequest(String requestedURL, HttpServletResponse response) throws IOException  {
+        // Make an array, where each element is one file with build info.
+        File folder = new File("main/builds");
+        File[] listOfFiles = folder.listFiles();
+
+        // For each file with build info, create a link to the correct file and print it to the page.
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                if (requestedURL.equals("http://localhost:8011/main/builds/" + fileName)) {
+                    PrintWriter pw = response.getWriter();
+                    Functions.printFileToPage("main/builds/" + fileName, fileName, pw, response);
+                }
+            }
         }
     }
 }
