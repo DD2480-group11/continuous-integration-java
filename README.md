@@ -17,7 +17,7 @@ The first command makes sure the correct version of Jetty is used. The second co
 
 Start the server and visit http://localhost:8011/ in your browser. Here, a build list will be available. 
 
-The builds are sorted by commit timestamps in descending order (most recent one at the top). If you click on the links you will get more specific test results. The builds test results are saved as files in the folder `src/main/builds`. Their filenames are a combination of their commit timestamps and their commit hashes.
+The builds are sorted by commit timestamps in descending order (most recent one at the top). If you click on the links you will get more specific test results. The builds test results are saved as text files in the folder `src/main/builds`. Their filenames are a combination of their commit timestamps and their commit hashes.
 
 ## How to get a public URL for your server
 
