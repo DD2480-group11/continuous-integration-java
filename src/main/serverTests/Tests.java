@@ -94,7 +94,7 @@ public class Tests {
         // Arrange: Add an invalid email as recipient
         String email = "invalid email";
 
-        assertFalse(Functions.sendFromServer(email, "text"));
+        assertFalse(Functions.sendFromServer(email,"text", "text"));
     }
 
     @Test
