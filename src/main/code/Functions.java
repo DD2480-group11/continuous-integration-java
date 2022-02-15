@@ -28,6 +28,7 @@ import java.util.Formatter;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.TimeUnit;
 
 public class Functions {
     // Runs command and returns the output as a String.
@@ -37,6 +38,7 @@ public class Functions {
         Process process = pb.start();
 
         String result = new String(process.getInputStream().readAllBytes());
+        //int exitCode = process.exitValue();
         return result;
     }
 
@@ -75,13 +77,11 @@ public class Functions {
          return compilationResult.equals("success\n");//
     }
 
-    // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
-    public static String runTests() throws IOException{
-        return runBashScript("runTests.sh");
+    // Runs the tests specified in the input script and returns the result of those tests.
+    public static String runTests(String script) throws IOException{
+        return runBashScript(script);
     }
-
-    //java -cp ".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar" org.junit.runner.JUnitCore "continuous-integration-java.src.main.serverTests.Tests"
-
+  
     // Turns a JSON HttpServletRequest object into a String.
     public static String JSONtoString(HttpServletRequest request) throws IOException {
         return request.getReader().lines().collect(Collectors.joining());
@@ -235,7 +235,6 @@ public class Functions {
      * @param text the string to write to file
      */
     public static void writeToFile(String fileName, String text){
-
         // Colons are not allowed in filenames. Replace with semi colons.
         fileName = fileName.replace(":", ";");
 
