@@ -55,8 +55,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
     }
     
-    // This function is called when someone visits the public forwarding URL specified by ngrok
-    // (e.g. http://d47a-92-34-27-8.ngrok.io)
+    // This function is called when someone visits the page localhost:8011, when the server is running.
     public void handleWebsiteVisit(String target,
                                    Request baseRequest,
                                    HttpServletRequest request,
@@ -64,25 +63,14 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                    String JSONstring)
         throws IOException, ServletException 
     {
-        String HTML = String.join("\n",
-            "<html>",
-                "<head>",
-                    "<title> Builds </title>",
-                "</head>",
-                "<body>",
-                    "<a href=\"./main/builds/1acb6a5e56c243f91248940e6468d36309188d5f.txt\">link</a>",
-                "</body>",
-            "</html>"
-        );
-
+        
+        // Print HTML with links to all builds
+        String HTML = Functions.getLinksToBuildsHTML();
         response.getWriter().println(HTML);
 
-        String url = request.getRequestURL().toString();
-        System.out.println(url);
-        if (url.equals("http://localhost:8011/main/builds/1acb6a5e56c243f91248940e6468d36309188d5f.txt")) {
-            PrintWriter pw = response.getWriter();
-            Functions.printFileToPage("main/builds/1acb6a5e56c243f91248940e6468d36309188d5f.txt", "some title", pw, response);
-        }
+        // If a link to a build is clicked; process the request and showcase the correct build info.
+        String requestedURL = request.getRequestURL().toString();
+        Functions.processURLrequest(requestedURL, response);
     }
 
     public void handleNewCommit(String target,
