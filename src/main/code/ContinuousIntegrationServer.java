@@ -54,16 +54,16 @@ public class ContinuousIntegrationServer extends AbstractHandler
             handleNewCommit(target, baseRequest, request, response, JSONstring);
         }
     }
-    
+
     // This function is called when someone visits the page localhost:8011, when the server is running.
     public void handleWebsiteVisit(String target,
                                    Request baseRequest,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    String JSONstring)
-        throws IOException, ServletException 
+        throws IOException, ServletException
     {
-        
+
         // Print HTML with links to all builds
         String HTML = Functions.getLinksToBuildsHTML();
         response.getWriter().println(HTML);
@@ -78,7 +78,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                 HttpServletRequest request,
                                 HttpServletResponse response,
                                 String JSONstring)
-        throws IOException, ServletException 
+        throws IOException, ServletException
     {
         // Extract branch name, email and commitHash from webhook message
         String branchName = Functions.getBranchName(JSONstring);
@@ -97,6 +97,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             //String codeCompilationResult = Functions.compilationCheck();
             boolean  testsCompiled = Functions.compileTestsCheck();
             //String testCompilationResult = Functions.compileTestsCheck();
+            boolean testsPassed = true;
 
             message.append("--- Test summary --- \n");//
             // Check if compilation of the server is successful
@@ -113,8 +114,16 @@ public class ContinuousIntegrationServer extends AbstractHandler
             // Check if tests compilation is successful.
             if (testsCompiled) {
                 message.append("Tests compiled succesfully.\n");
-                //If tests compile, run the tests and print the result.
+                //If tests compile, run the tests.
                 String testResults = Functions.runTests();
+                //Tests failed
+                if(testResults.contains("Failures: ")){
+                    testsPassed = false;
+                    message.append("Tests failed.\n");
+                }//Tests passed
+                else{
+                    message.append("Tests passed.\n");
+                }
                 message.append("\n--- Specific test info --- \n");//
                 message.append(testResults+"\n");
             }
@@ -135,9 +144,17 @@ public class ContinuousIntegrationServer extends AbstractHandler
             // Convert test results to String
             String messageStr = message.toString();
 
+            //Construct buildresult based on if code and tests compiled and if tests passed.
+            String buildResult = "";
+            if(codeCompiled && testsCompiled && testsPassed){
+                buildResult = "Build successful";
+            }else{
+                buildResult = "Build failed";
+            }
+
             // The test results will be printed to terminal, sent via email to commiter, and written to a build file.
             System.out.println(messageStr);
-            Functions.sendFromServer(email, messageStr);
+            Functions.sendFromServer(email, buildResult, messageStr);
             Functions.writeToFile("main/builds/" + commitTimestamp + commitHash + ".txt", messageStr);
 
             // Repond to github webhook.

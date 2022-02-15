@@ -78,7 +78,7 @@ public class Functions {
     // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
     public static String runTests() throws IOException{
         return runBashScript("runTests.sh");
-    } 
+    }
 
     //java -cp ".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar" org.junit.runner.JUnitCore "continuous-integration-java.src.main.serverTests.Tests"
 
@@ -162,7 +162,7 @@ public class Functions {
     }
 
         /**
-     * 
+     *
      * @param JSONstring
      * @return
      * @throws IOException
@@ -192,7 +192,7 @@ public class Functions {
     }
 
 
-    public static boolean sendFromServer(String recipient, String text) {
+    public static boolean sendFromServer(String recipient,String subject, String text) {
 
         String sender = "ciserverupdate@gmail.com";
         String password = "skickamail1!";
@@ -216,7 +216,7 @@ public class Functions {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(sender));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-            message.setSubject("Result from CI Server");
+            message.setSubject("Result: " + subject);
             message.setText(text);
             Transport.send(message);
             return true;
@@ -234,18 +234,18 @@ public class Functions {
      * @param fileName the name of the file to write to
      * @param text the string to write to file
      */
-    public static void writeToFile(String fileName, String text){ 
+    public static void writeToFile(String fileName, String text){
 
         // Colons are not allowed in filenames. Replace with semi colons.
         fileName = fileName.replace(":", ";");
 
         Formatter formatter;
         try {
-            formatter = new Formatter(fileName);  
+            formatter = new Formatter(fileName);
             formatter.format("%s", text);
             formatter.close();
         }
-        catch(Exception e) {     
+        catch(Exception e) {
             System.out.println("Error: file could not be created or written to.");
         }
     }
@@ -293,7 +293,7 @@ public class Functions {
                 HTML += "<p>" + line + "</p>";
             }
             sc.close();
-        } 
+        }
         catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -306,7 +306,7 @@ public class Functions {
 
     /**
      * Clears the web page that is being printed to
-     * @param response the HttpServletResponse object which is printing to the webpage. 
+     * @param response the HttpServletResponse object which is printing to the webpage.
      */
     public static void clearPage(HttpServletResponse response) {
         response.resetBuffer();
@@ -335,7 +335,7 @@ public class Functions {
         HTML += "<h1> Build links </h1>";
         HTML += "<p> The builds are sorted by their commit timestamps, with the most recent one at the top. </p>";
         HTML += "<p> Each file name is a combination of a timestamp and commit hash. </p>";
-        
+
         // Make an array, where each element is one file with build info.
         File folder = new File("main/builds");
         File[] listOfFiles = folder.listFiles();
@@ -353,7 +353,7 @@ public class Functions {
     }
 
     /**
-     * Processes the requested URL to a specific build. 
+     * Processes the requested URL to a specific build.
      * Prints a web page in HTML format, with tests result for that specific build.
      * @param requestedURL the request URL
      * @param response the HttpServletResponse which can write to the page
@@ -376,4 +376,3 @@ public class Functions {
         }
     }
 }
-
