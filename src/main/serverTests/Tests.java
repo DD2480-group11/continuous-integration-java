@@ -73,17 +73,9 @@ public class Tests {
     }
 
     @Test
-    public void test_sendFromServer1() throws IOException {
+    public void test_sendFromServer_invalidEmail() throws IOException {
         // Arrange: Add an invalid email as recipient
-        String email = "xxxxx";
-
-        assertFalse(Functions.sendFromServer(email, "text"));
-    }
-
-    @Test
-    public void test_sendFromServer2() throws IOException {
-        // Arrange: Add an invalid email as recipient
-        String email = "xxxx@x";
+        String email = "invalid email";
 
         assertFalse(Functions.sendFromServer(email, "text"));
     }

@@ -164,10 +164,6 @@ public class Functions {
         String sender = "ciserverupdate@gmail.com";
         String password = "skickamail1!";
 
-        if(!(recipient.contains("@") && recipient.contains(".")) ){
-            return false;
-        }
-
         // setting up gmail smtp
         Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
@@ -190,13 +186,13 @@ public class Functions {
             message.setSubject("Result from CI Server");
             message.setText(text);
             Transport.send(message);
+            return true;
         }
-        catch (MessagingException mex)
+        catch (Exception e)
         {
-            mex.printStackTrace();
-
+            //e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
     /**
