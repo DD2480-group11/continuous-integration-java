@@ -98,17 +98,16 @@ public class ContinuousIntegrationServer extends AbstractHandler
             boolean  testsCompiled = Functions.compileTestsCheck();
             //String testCompilationResult = Functions.compileTestsCheck();
 
+            message.append("--- Test summary --- \n");//
             // Check if compilation of the server is successful
             if (codeCompiled) {
                 message.append("Code compiled succesfully\n");
-                System.out.println("Server compiled succesfully.");
             }
             else {
                 //TODO: add compilation errors
                 //message.append(codeCompilationResult);
                 message.append("Code compilation failed.");
                 //System.out.print(codeCompilationResult);
-                System.out.println("Server compilation failed.");
             }
 
             // Check if tests compilation is successful.
@@ -116,8 +115,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 message.append("Tests compiled succesfully.\n");
                 //If tests compile, run the tests and print the result.
                 String testResults = Functions.runTests();
-                System.out.println(testResults);
-                message.append("Testresults: \n");//
+                message.append("\n--- Specific test info --- \n");//
                 message.append(testResults+"\n");
             }
             else {
@@ -125,14 +123,14 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 //System.out.println(testCompilationResult);
                 //message.append(testCompilationResult);
                 message.append("Tests compilation failed.");
-                System.out.println("Tests compilation failed.");
 
             }
 
             // Add branch name, timestamp, and commit hash to the test results message.
-            message.append("Commit branch name: " + branchName);
-            message.append("\nCommit timestamp: " + commitTimestamp);
-            message.append("\nCommit hash: " + commitHash);
+            message.append("--- Commit specifics ---");
+            message.append("\nBranch name:\t" + branchName);
+            message.append("\nTimestamp:\t" + commitTimestamp);
+            message.append("\nHash:\t\t" + commitHash);
 
             // Convert test results to String
             String messageStr = message.toString();

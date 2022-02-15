@@ -4,13 +4,13 @@ Tests compiled succesfully.
 
 --- Specific test info --- 
 JUnit version 4.12
-.......
-Time: 2.051
+........
+Time: 6.716
 
-OK (7 tests)
+OK (8 tests)
 
 
 --- Commit specifics ---
-Branch name:	main
-Timestamp:	2022-02-15T15:53:54+01:00
-Hash:		bd58a21891ad0ce4f3cc1f303b32383f654cb7b3
+Branch name:	issue/89
+Timestamp:	2022-02-15T16:49:50+01:00
+Hash:		f82636282703389bdf02734b5dc1ea971e5c87ad
