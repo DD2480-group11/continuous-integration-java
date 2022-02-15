@@ -7,7 +7,7 @@ import main.code.*;
 
 import java.io.IOException;
 
-// This class includes tests used to showcase that the testexecution of the CI server works correctly.
+// This class includes trivial tests used to showcase that the testexecution of the CI server works correctly.
 public class mockTests {
 
 	@Test

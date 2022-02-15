@@ -98,8 +98,8 @@ public class Functions {
      */
     //
     // Returns true if compilation was successful, otherwise false.
-    public static boolean compilationCheck() throws IOException {
-        String compilationResult = runBashScript("compilationCheck.sh");
+    public static boolean compilationCheck(String script) throws IOException {
+        String compilationResult = runBashScript(script);
         return compilationResult.equals("success\n");
     }
 
@@ -127,7 +127,7 @@ public class Functions {
     public static String runTests(String script) throws IOException{
         return runBashScript(script);
     }
-  
+
     /**
      * Turns a JSON HttpServletRequest object into a String
      *
@@ -254,9 +254,9 @@ public class Functions {
 
         return timestamp;
     }
-  
+
     /**
-     * Sends an email with a given text String as a message and a given String as subject from the server to the 
+     * Sends an email with a given text String as a message and a given String as subject from the server to the
      * given email address of the recipent
      *
      * @param recipient The recipents email address
