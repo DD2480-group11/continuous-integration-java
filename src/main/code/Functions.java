@@ -281,7 +281,8 @@ public class Functions {
                 "<head>",
                     "<title> " + title + " </title>",
                 "</head>",
-                "<body>"
+                "<body>",
+                "<p> <a href=\"http://localhost:8011\">Go to build list</a> </p>"
         );
 
         try {
@@ -331,12 +332,16 @@ public class Functions {
     public static String getLinksToBuildsHTML() {
         String HTML = "<html> <head> <title> Builds </title> </head> <body>";
 
+        HTML += "<h1> Build links </h1>";
+        HTML += "<p> Sorted by commit timestamps, with the most recent one at the top. </p>";
+        HTML += "<p> Each file name is a combination of the timestamp and commit hash. </p>";
+        
         // Make an array, where each element is one file with build info.
         File folder = new File("main/builds");
         File[] listOfFiles = folder.listFiles();
 
         // Add one link for each file with build info.
-        for (int i = 0; i < listOfFiles.length; i++) {
+        for (int i = listOfFiles.length - 1; i > -1; i--) {
             if (listOfFiles[i].isFile()) {
                 String fileName = listOfFiles[i].getName();
                 HTML += "<p> <a href=\"./main/builds/" + fileName + "\">" + fileName + "</a> </p>";
