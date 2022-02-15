@@ -129,4 +129,21 @@ public class Tests {
       // System.out.println("exit:" + exitcode);
        assertFalse(testResults.contains("Failures: "));//exitcode.equals("0")
     }
+
+    @Test
+    public void test_newCommitWasMade_false() {
+        // Arrange a JSONstring which is generated when a new webhook is created, i.e. a new commit has NOT been made.
+        String JSONstring = "{\"zen\":\"Practicality beats purity.\",\"hook_id\":343438962,\"hook\":{\"type\":\"Repository\",\"id\":343438962,\"name\":\"web\",\"active\":true";
+        assertFalse(Functions.newCommitWasMade(JSONstring));
+    }
+
+    @Test
+    public void test_newCommitWasMade_true() {
+        // Arrange a JSONstring which is generated when a new commit was made.
+        String JSONstring = "{\"ref\":\"refs/heads/someBranchName\"..." +
+            "commits\":[{\"id\":\"bd58a21891ad0ce4f3cc1f303b32383f654cb7b3\",\"tree_id\":\"8574623057713cf6bf8aedcb76c063714abd8a10\n" +
+            "distinct\":true,\"message\":\"Fixed #93. localhost:8011 has links to each build, (#94)\n\nwith test-results info.\"," +
+            "\"timestamp\":\"2022-02-15T15:53:54+01:00\",\"url\":\"...";
+        assertTrue(Functions.newCommitWasMade(JSONstring));
+    }
 }
