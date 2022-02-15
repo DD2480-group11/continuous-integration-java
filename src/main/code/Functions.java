@@ -289,5 +289,52 @@ public class Functions {
             System.out.println("Error: the file " + fileName + " does not exist.");
         }
     }
+
+    /**
+     * Returns a String in HTML format, which includes links to each individual commit.
+     * @return String String in HTML format, which includes links to each individual commit.
+     */
+    public static String getLinksToBuildsHTML() {
+        String HTML = "<html> <head> <title> Builds </title> </head> <body>";
+
+        // Make an array, where each element is one file with build info.
+        File folder = new File("main/builds");
+        File[] listOfFiles = folder.listFiles();
+
+        // Add one link for each file with build info.
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                HTML += "<p> <a href=\"./main/builds/" + fileName + "\">" + fileName + "</a> </p>";
+            }
+        }
+
+        HTML += "</body> </html>";
+        return HTML;
+    }
+
+    /**
+     * Processes the requested URL to a specific build. 
+     * Prints a web page in HTML format, with tests result for that specific build.
+     * @param requestedURL the request URL
+     * @param response the HttpServletResponse which can write to the page
+     * @throws IOException if an exception is thrown when trying to write to the page
+     */
+    public static void processURLrequest(String requestedURL, HttpServletResponse response) throws IOException  {
+        // Make an array, where each element is one file with build info.
+        File folder = new File("main/builds");
+        File[] listOfFiles = folder.listFiles();
+
+        // For each file with build info, create a link to the correct file and print it to the page.
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                if (requestedURL.equals("http://localhost:8011/main/builds/" + fileName)) {
+                    PrintWriter pw = response.getWriter();
+                    Functions.printFileToPage("main/builds/" + fileName, fileName, pw, response);
+                }
+            }
+        }
+    }
 }
 
