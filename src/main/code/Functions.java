@@ -333,8 +333,8 @@ public class Functions {
         String HTML = "<html> <head> <title> Builds </title> </head> <body>";
 
         HTML += "<h1> Build links </h1>";
-        HTML += "<p> Sorted by commit timestamps, with the most recent one at the top. </p>";
-        HTML += "<p> Each file name is a combination of the timestamp and commit hash. </p>";
+        HTML += "<p> The builds are sorted by their commit timestamps, with the most recent one at the top. </p>";
+        HTML += "<p> Each file name is a combination of a timestamp and commit hash. </p>";
         
         // Make an array, where each element is one file with build info.
         File folder = new File("main/builds");

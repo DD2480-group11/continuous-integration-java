@@ -4,7 +4,7 @@ This is a continuous integration github-webhook-server, written in Java.
 
 ## How to start the server
 
-Navigate to the `src` folder. Make sure that the files `jetty-all-7.0.2.v20100331.jar` and `servlet-api-2.5.jar` are in that folder. Then run the following commands:
+Navigate to the `src` folder and run the following commands.
 ```
 JETTY_VERSION=7.0.2.v20100331
 javac -cp servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar:javax.mail.jar:jakarta.activation.jar "main/code/ContinuousIntegrationServer.java" "main/code/Functions.java"
@@ -13,9 +13,15 @@ java -cp .:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar:javax.mail.jar:jakar
 
 The first command makes sure the correct version of Jetty is used. The second command compiles the relevant Server files, with some .jar files. The third command starts the server.
 
+## How to access the build list
+
+Start the server and visit `http://localhost:8011/` in your browser. Here, a build list will be available. 
+
+The builds are sorted by commit timestamps in descending order (most recent one at the top). If you click on the links you will get more specific test results. The builds test results are saved as files in the folder `src/main/builds`. Their filenames are a combination of their commit timestamps and their commit hashes.
+
 ## How to get a public URL for your server
 
-Open another window and navigate to the src foler. Make sure the `ngrok` file is in that folder. Start ngrok with the following command.
+Navigate to a folder where you have the `ngrok` file. ngrok download instructions are available [here](https://github.com/KTH-DD2480/smallest-java-ci). Start ngrok with the following command.
 
 ```
 ./ngrok http 8011
