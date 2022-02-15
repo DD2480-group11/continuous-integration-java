@@ -453,4 +453,8 @@ public class Functions {
             }
         }
     }
+
+    public static boolean newCommitWasMade(String JSONstring) {
+        return !JSONstring.substring(0, 7).equals("{\"zen\":");
+    }
 }

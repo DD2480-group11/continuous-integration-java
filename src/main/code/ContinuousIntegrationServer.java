@@ -52,14 +52,14 @@ public class ContinuousIntegrationServer extends AbstractHandler
         baseRequest.setHandled(true);
 
         // Convert the JSON payload into a String
-         String JSONstring = Functions.JSONtoString(request);
-        // System.out.println(">" + JSONstring + "<");
+        String JSONstring = Functions.JSONtoString(request);
+        
 
         // Depending on what request has come in, call different functions
         if (JSONstring.equals("")) {
             handleWebsiteVisit(target, baseRequest, request, response, JSONstring);
         }
-        else {
+        else if (Functions.newCommitWasMade(JSONstring)) {
             handleNewCommit(target, baseRequest, request, response, JSONstring);
         }
     }
