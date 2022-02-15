@@ -26,8 +26,17 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
+/**
+ * A class containing functions needed to run the Continuous Integration Server
+ */
 public class Functions {
-    // Runs command and returns the output as a String.
+    /**
+     * Runs a string command and returns the output as a String
+     *
+     * @param command
+     * @return result
+     * @throws IOException
+     */
     public static String runCommand(String command) throws IOException {
         ProcessBuilder pb = new ProcessBuilder();
 	    pb.command("bash", "-c", command);
@@ -37,58 +46,103 @@ public class Functions {
         return result;
     }
 
-    // Clones this git repo into the folder src/continuous-integration-java.
+    /**
+     * Clones the git repo into the folder src/continuous-integration-java
+     *
+     * @throws IOException
+     */
     public static void cloneThisRepo() throws IOException {
         runCommand("git clone git@github.com:DD2480-group11/continuous-integration-java.git");
     }
 
-    // Clones the specified branch of this git repo into the folder src/continuous-integration-java.
+    /**
+     * Clones the given branch of the git repo into the folder src/continuous-integration-java
+     *
+     * @param branchName
+     * @throws IOException
+     */
     public static void cloneBranch(String branchName) throws IOException {
         runCommand("git clone -b " + branchName + " git@github.com:DD2480-group11/continuous-integration-java.git");
     }
 
-    // Deletes the repo src/continuous-integration-java.
+    /**
+     * Deletes the repo src/continuous-integration-java
+     *
+     * @throws IOException
+     */
     public static void deleteClonedRepo() throws IOException {
         runCommand("rm -rf continuous-integration-java");
     }
 
-    // Runs the bash script with given filename. The script should be located in the scripts folder.
-    // Returns the output as a String.
+    /**
+     * Runs the bash script located in the script folder with given filename
+     *
+     * @param filename
+     * @return runCommand("bash main/code/scripts/" + filename) Launches runCommand which ouputs the result as a string
+     * @throws IOException
+     */
     public static String runBashScript(String filename) throws IOException {
         return runCommand("bash main/code/scripts/" + filename);
     }
 
-    // Tries to compile the server of the cloned repo, using the bash script "compilationCheck.sh".
+    /**
+     * Tries to compile the server of the cloned repo, using the bash script "compilationCheck.sh"
+     *
+     * @return compilationResult.equals("success\n")
+     * @throws IOException
+     */
+    //
     // Returns true if compilation was successful, otherwise false.
     public static boolean compilationCheck() throws IOException {
         String compilationResult = runBashScript("compilationCheck.sh");
         return compilationResult.equals("success\n");
     }
 
-    // Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh".
+    /**
+     * Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh"
+     *
+     * @return compilationResult.equals("success\n")
+     * @throws IOException
+     */
+
     // Returns true if compilation was successful, otherwise false.
     public static boolean compileTestsCheck() throws IOException {
         String compilationResult = runBashScript("compileTestsCheck.sh");
-         return compilationResult.equals("success\n");//
+         return compilationResult.equals("success\n");
     }
 
-    // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
+    /**
+     * Runs the tests in main/serverTests.Tests.java and launches runBashScript which
+     * returns the output of those tests
+     *
+     * @return runBashScript("runTests.sh")
+     * @throws IOException
+     */
     public static String runTests() throws IOException{
         return runBashScript("runTests.sh");
-    } 
+    }
 
-    //java -cp ".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar" org.junit.runner.JUnitCore "continuous-integration-java.src.main.serverTests.Tests"
-
-    // Turns a JSON HttpServletRequest object into a String.
+    /**
+     * Turns a JSON HttpServletRequest object into a String
+     *
+     * @param request A HttpServletRequest
+     * @return request.getReader().lines().collect(Collectors.joining())
+     * @throws IOException
+     */
     public static String JSONtoString(HttpServletRequest request) throws IOException {
         return request.getReader().lines().collect(Collectors.joining());
     }
 
-    // Takes a JSON String with github commit information from a github webhook.
-    // Extracts and returns the name of the branch that was pushed to.
+    /**
+     * Takes a JSON String with github commit information from a github webhook and returns the name of the
+     * branch that was pushed to
+     *
+     * @param JSONstring A string of a JSON object
+     * @return branchName
+     * @throws IOException
+     */
     public static String getBranchName(String JSONstring) throws IOException  {
         String branchName = "";
-
         // Extract each character from the branch name.
         // The branch name starts at index 19 in the string, and ends with a quotation mark.
         int i = 19;
@@ -99,12 +153,17 @@ public class Functions {
             c = JSONstring.charAt(i);
             i++;
         }
-
         return branchName;
     }
 
-    // Takes a JSON String with github commit information from a github webhook.
-    // Extracts and returns the email of the committer.
+    /**
+     * Takes a JSON String with github commit information from a github webhook and returns
+     * the email address of the committer
+     *
+     * @param JSONstring A string of a JSON object
+     * @return email
+     * @throws IOException
+     */
     public static String getEmail(String JSONstring) throws IOException {
         String email = "";
         String comStr = "\"committer\":{";
@@ -126,10 +185,17 @@ public class Functions {
                 k++;
                 c = restJSON.charAt(k);
         }
-
         return email;
     }
 
+    /**
+     * Sends an email containing the text String given as input from the servers email address to given input email
+     * to the given email address of the recipent
+     *
+     * @param recipient The recipents email address
+     * @param text The text to send in an email
+     * @return true or false Returns false if the recipients email address is faulty otherwise true
+     */
     public static boolean sendFromServer(String recipient, String text) {
 
         String sender = "ciserverupdate@gmail.com";
@@ -165,16 +231,16 @@ public class Functions {
         catch (MessagingException mex)
         {
             mex.printStackTrace();
-
         }
         return true;
     }
 
     /**
-     * Creates a file, and writes a String to it.
+     * Creates a file named as fileName and writes the text String given as input to it
      * If file already exists then it will be overwritten.
-     * @param fileName the name of the file to write to
-     * @param text the string to write to file
+     *
+     * @param fileName
+     * @param text
      */
     public static void writeToFile(String fileName, String text){ 
         Formatter formatter;
@@ -189,9 +255,10 @@ public class Functions {
     }
 
     /**
-     * Reads a file and returns contents as a String.
-     * @param fileName the file to read
-     * @return the contents of the file
+     * Reads a file and returns its content as a String
+     *
+     * @param fileName
+     * @return content
      */
     public static String readFile(String fileName) {
         String content = "";
@@ -205,9 +272,10 @@ public class Functions {
     }
 
     /**
-     * Adds text to a file, if it already exists.
-     * @param fileName file to add text to
-     * @param text the text you want to add to the file
+     * Adds a given text as a String to a given file if the file exists
+     *
+     * @param fileName
+     * @param text
      */
     public static void appendToFile(String fileName, String text) {
         try {
