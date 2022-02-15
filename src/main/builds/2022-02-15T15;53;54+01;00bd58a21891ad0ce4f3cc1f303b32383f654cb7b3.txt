@@ -1,0 +1,13 @@
+Code compiled succesfully
+Tests compiled succesfully.
+Testresults: 
+JUnit version 4.12
+.......
+Time: 2.057
+
+OK (7 tests)
+
+
+Commit branch name: main
+Commit timestamp: 2022-02-15T15:53:54+01:00
+Commit hash: bd58a21891ad0ce4f3cc1f303b32383f654cb7b3

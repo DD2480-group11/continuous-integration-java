@@ -84,6 +84,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String branchName = Functions.getBranchName(JSONstring);
         String email = Functions.getEmail(JSONstring);
         String commitHash = Functions.getCommitHash(JSONstring);
+        String commitTimestamp = Functions.getCommitTimestamp(JSONstring);
 
         if (!commitHash.equals("0000000000000000000000000000000000000000")) {
             // Delete the old cloned repo, and clone the branch of the new commit.
@@ -128,27 +129,20 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
             }
 
-            // Add branch name of the commit to email message.
-            message.append("Branch name of commit: " + branchName);
-
-            // Add commit hash to email message.
+            // Add branch name, timestamp, and commit hash to the test results message.
+            message.append("Commit branch name: " + branchName);
+            message.append("\nCommit timestamp: " + commitTimestamp);
             message.append("\nCommit hash: " + commitHash);
 
             // Convert test results to String
             String messageStr = message.toString();
 
-            // --- Test results message has now been finalized, and can be communicated on neccesary channels ---
-
-            // Print test results to terminal
+            // The test results will be printed to terminal, sent via email to commiter, and written to a build file.
             System.out.println(messageStr);
-
-            // Send test results to commiter via email
             Functions.sendFromServer(email, messageStr);
+            Functions.writeToFile("main/builds/" + commitTimestamp + commitHash + ".txt", messageStr);
 
-            // Add test results to a new file
-            Functions.writeToFile("main/builds/" + commitHash + ".txt", messageStr);
-
-            // Response to github webhook (and shown on localhost webpage)
+            // Repond to github webhook.
             response.getWriter().println("CI job done");
         }
     }
