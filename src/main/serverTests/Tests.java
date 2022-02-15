@@ -17,6 +17,7 @@ import java.beans.Transient;
 import main.code.*;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 // This class includes tests for various functions.
 public class Tests {
@@ -104,11 +105,20 @@ public class Tests {
     @Test
     public void test_testExcecution() throws IOException {
         // Arrange
-       String mockTestfile = "main.serverTests.mockTesting.mockTests.java";
-
+       String mockTestScript = "runMockTests.sh";
        // Assert
-       String testResults = Functions.runTests(mockTestfile);
-       assertTrue(testResults.charAt(0).equals("0"));
+       String testResults = Functions.runTests(mockTestScript);
+       //System.out.println("Results: "+testResults + "End of results");
+      // String exitcode = Character.toString(testResults.charAt(testResults.length()-1));
+      // System.out.println("exit:" + exitcode);
+       assertFalse(testResults.contains("Failures: "));//exitcode.equals("0")
+    }
+
+    @Test
+    public void test_testExcecution2() throws IOException {
+        // Arrange
+
+       assertFalse(false);
     }
 
 

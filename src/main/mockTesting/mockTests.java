@@ -19,23 +19,23 @@ import main.code.*;
 import java.io.IOException;
 
 // This class includes tests for various functions.
-public class Tests {
+public class mockTests {
 
 	@Test
     public void test1() throws IOException {
         // Arrange
-        boolean true = true;
-
+        boolean tru = true;
+		
         // Assert
-        assertTrue(true);
+        assertTrue(tru);
     }
-	
+
 	@Test
-    public void test1() throws IOException {
+    public void test2() throws IOException {
         // Arrange
-        boolean true = true;
+        boolean tru = true;
 
         // Assert
-        assertFalse(!true);
+        assertFalse(!tru);
     }
 }

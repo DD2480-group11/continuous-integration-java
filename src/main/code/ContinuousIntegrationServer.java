@@ -53,7 +53,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             handleNewCommit(target, baseRequest, request, response, JSONstring);
         }
     }
-    
+
     // This function is called when someone visits the public forwarding URL specified by ngrok
     // (e.g. http://d47a-92-34-27-8.ngrok.io)
     public void handleWebsiteVisit(String target,
@@ -61,7 +61,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    String JSONstring)
-        throws IOException, ServletException 
+        throws IOException, ServletException
     {
         String HTML = "<html>\n " +
         "<head>\n " +
@@ -79,7 +79,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                 HttpServletRequest request,
                                 HttpServletResponse response,
                                 String JSONstring)
-        throws IOException, ServletException 
+        throws IOException, ServletException
     {
         // Extract branch name, email and commitHash from webhook message
         String branchName = Functions.getBranchName(JSONstring);
@@ -115,7 +115,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             if (testsCompiled) {
                 message.append("Tests compiled succesfully.\n");
                 //If tests compile, run the tests and print the result.
-                String testResults = Functions.runTests();
+                String testResults = Functions.runTests("runTests.sh");
                 System.out.println(testResults);
                 message.append("Testresults: \n");//
                 message.append(testResults+"\n");

@@ -25,6 +25,7 @@ import java.util.Formatter;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.TimeUnit;
 
 public class Functions {
     // Runs command and returns the output as a String.
@@ -34,8 +35,8 @@ public class Functions {
         Process process = pb.start();
 
         String result = new String(process.getInputStream().readAllBytes());
-        int exitCode = process.exitValue();
-        return exitCode + result;
+        //int exitCode = process.exitValue();
+        return result;
     }
 
     // Clones this git repo into the folder src/continuous-integration-java.
@@ -74,8 +75,29 @@ public class Functions {
     }
 
     // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
-    public static String runTests(String path) throws IOException{
-        return runBashScript("runTests.sh " + path);
+    public static String runTests(String script) throws IOException{
+        return runBashScript(script);
+    }
+
+    public static String runBashScript2(String filename) throws IOException {
+        return runCommand2("bash main/code/scripts/" + filename);
+    }
+
+    public static String runCommand2(String command) throws IOException {
+        ProcessBuilder pb = new ProcessBuilder();
+	    pb.command("bash", "-c", command);
+        Process process = pb.start();
+
+        String result = new String(process.getInputStream().readAllBytes());
+        long time = 10;
+        try{
+            process.waitFor(time, TimeUnit.MILLISECONDS);
+        }catch(InterruptedException e){
+
+        }
+
+        String exitCode = Integer.toString(process.exitValue());
+        return result; //+ exitCode;
     }
 
     //java -cp ".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar" org.junit.runner.JUnitCore "continuous-integration-java.src.main.serverTests.Tests"
