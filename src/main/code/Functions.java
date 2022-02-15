@@ -34,7 +34,8 @@ public class Functions {
         Process process = pb.start();
 
         String result = new String(process.getInputStream().readAllBytes());
-        return result;
+        int exitCode = process.exitValue();
+        return exitCode + result;
     }
 
     // Clones this git repo into the folder src/continuous-integration-java.
@@ -73,9 +74,9 @@ public class Functions {
     }
 
     // Runs the tests in main/serverTests.Tests.java and returns the output of those tests.
-    public static String runTests() throws IOException{
-        return runBashScript("runTests.sh");
-    } 
+    public static String runTests(String path) throws IOException{
+        return runBashScript("runTests.sh " + path);
+    }
 
     //java -cp ".:hamcrest.jar:junit.jar:servlet-api-2.5.jar:jakarta.activation.jar:javax.mail.jar:jetty-all-$JETTY_VERSION.jar" org.junit.runner.JUnitCore "continuous-integration-java.src.main.serverTests.Tests"
 
@@ -201,14 +202,14 @@ public class Functions {
      * @param fileName the name of the file to write to
      * @param text the string to write to file
      */
-    public static void writeToFile(String fileName, String text){ 
+    public static void writeToFile(String fileName, String text){
         Formatter formatter;
         try {
-            formatter = new Formatter(fileName);  
+            formatter = new Formatter(fileName);
             formatter.format("%s", text);
             formatter.close();
         }
-        catch(Exception e) {     
+        catch(Exception e) {
             System.out.println("Error: file could not be created or written to.");
         }
     }
@@ -242,4 +243,3 @@ public class Functions {
         }
     }
 }
-

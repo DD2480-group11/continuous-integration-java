@@ -97,7 +97,19 @@ public class Tests {
 
         String actual = Functions.readFile("main/serverTests/testFile.txt");
         String expected = "some text and some more";
-        
+
         assertTrue(actual.equals(expected));
     }
+
+    @Test
+    public void test_testExcecution() throws IOException {
+        // Arrange
+       String mockTestfile = "main.serverTests.mockTesting.mockTests.java";
+
+       // Assert
+       String testResults = Functions.runTests(mockTestfile);
+       assertTrue(testResults.charAt(0).equals("0"));
+    }
+
+
 }
