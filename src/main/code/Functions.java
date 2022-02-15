@@ -30,8 +30,17 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A class containing functions needed to run the Continuous Integration Server
+ */
 public class Functions {
-    // Runs command and returns the output as a String.
+    /**
+     * Runs a string command and returns the output as a String
+     *
+     * @param command
+     * @return result
+     * @throws IOException
+     */
     public static String runCommand(String command) throws IOException {
         ProcessBuilder pb = new ProcessBuilder();
 	    pb.command("bash", "-c", command);
@@ -42,56 +51,104 @@ public class Functions {
         return result;
     }
 
-    // Clones this git repo into the folder src/continuous-integration-java.
+    /**
+     * Clones the git repo into the folder src/continuous-integration-java
+     *
+     * @throws IOException
+     */
     public static void cloneThisRepo() throws IOException {
         runCommand("git clone git@github.com:DD2480-group11/continuous-integration-java.git");
     }
 
-    // Clones the specified branch of this git repo into the folder src/continuous-integration-java.
+    /**
+     * Clones the given branch of the git repo into the folder src/continuous-integration-java
+     *
+     * @param branchName
+     * @throws IOException
+     */
     public static void cloneBranch(String branchName) throws IOException {
         runCommand("git clone -b " + branchName + " git@github.com:DD2480-group11/continuous-integration-java.git");
     }
 
-    // Deletes the repo src/continuous-integration-java.
+    /**
+     * Deletes the repo src/continuous-integration-java
+     *
+     * @throws IOException
+     */
     public static void deleteClonedRepo() throws IOException {
         runCommand("rm -rf continuous-integration-java");
     }
 
-    // Runs the bash script with given filename. The script should be located in the scripts folder.
-    // Returns the output as a String.
+    /**
+     * Runs the bash script located in the script folder with given filename
+     *
+     * @param filename
+     * @return runCommand("bash main/code/scripts/" + filename) Launches runCommand which ouputs the result as a string
+     * @throws IOException
+     */
     public static String runBashScript(String filename) throws IOException {
         return runCommand("bash main/code/scripts/" + filename);
     }
 
-    // Tries to compile the server of the cloned repo, using the bash script "compilationCheck.sh".
+    /**
+     * Tries to compile the server of the cloned repo, using the bash script "compilationCheck.sh"
+     *
+     * @return compilationResult.equals("success\n")
+     * @throws IOException
+     */
+    //
     // Returns true if compilation was successful, otherwise false.
     public static boolean compilationCheck() throws IOException {
         String compilationResult = runBashScript("compilationCheck.sh");
         return compilationResult.equals("success\n");
     }
 
-    // Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh".
+    /**
+     * Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh"
+     *
+     * @return compilationResult.equals("success\n")
+     * @throws IOException
+     */
+
     // Returns true if compilation was successful, otherwise false.
     public static boolean compileTestsCheck() throws IOException {
         String compilationResult = runBashScript("compileTestsCheck.sh");
-         return compilationResult.equals("success\n");//
+         return compilationResult.equals("success\n");
     }
 
-    // Runs the tests specified in the input script and returns the result of those tests.
+    /**
+     * Runs the tests specified in the input script and launches runBashScript which
+     * returns the output of those tests
+     *
+     * param script
+     * @return runBashScript("runTests.sh")
+     * @throws IOException
+     */
     public static String runTests(String script) throws IOException{
         return runBashScript(script);
     }
   
-    // Turns a JSON HttpServletRequest object into a String.
+    /**
+     * Turns a JSON HttpServletRequest object into a String
+     *
+     * @param request A HttpServletRequest
+     * @return request.getReader().lines().collect(Collectors.joining())
+     * @throws IOException
+     */
     public static String JSONtoString(HttpServletRequest request) throws IOException {
         return request.getReader().lines().collect(Collectors.joining());
     }
 
-    // Takes a JSON String with github commit information from a github webhook.
-    // Extracts and returns the name of the branch that was pushed to.
+    /**
+     * Takes a JSON String with github commit information from a github webhook and returns the name of the
+     * branch that was pushed to
+     *
+     * @param JSONstring A string of a JSON object
+     * @return branchName
+     * @throws IOException
+     */
     public static String getBranchName(String JSONstring) throws IOException  {
         String branchName = "";
-
         // Extract each character from the branch name.
         // The branch name starts at index 19 in the string, and ends with a quotation mark.
         int i = 19;
@@ -102,12 +159,17 @@ public class Functions {
             c = JSONstring.charAt(i);
             i++;
         }
-
         return branchName;
     }
 
-    // Takes a JSON String with github commit information from a github webhook.
-    // Extracts and returns the email of the committer.
+    /**
+     * Takes a JSON String with github commit information from a github webhook and returns
+     * the email address of the committer
+     *
+     * @param JSONstring A string of a JSON object
+     * @return email
+     * @throws IOException
+     */
     public static String getEmail(String JSONstring) throws IOException {
         String email = "";
         String comStr = "\"committer\":{";
@@ -129,13 +191,13 @@ public class Functions {
                 k++;
                 c = restJSON.charAt(k);
         }
-
         return email;
     }
 
     /**
      * Takes a JSON String with github commit information from a github webhook.
      * Extracts and returns the commit hash of the committer.
+     *
      * @param JSONstring the String containg the JSON info
      * @return the commit hash of the commit
      * @throws IOException
@@ -161,7 +223,9 @@ public class Functions {
         return commitHash;
     }
 
-        /**
+     /**
+     * Takes a JSON String with github commit information from a github webhook and returns
+     * the timestamp of the commit
      *
      * @param JSONstring
      * @return
@@ -190,8 +254,16 @@ public class Functions {
 
         return timestamp;
     }
-
-
+  
+    /**
+     * Sends an email with a given text String as a message and a given String as subject from the server to the 
+     * given email address of the recipent
+     *
+     * @param recipient The recipents email address
+     * @param subject The text to be inserted in the subject field of the email
+     * @param text The text to send in an email
+     * @return true or false Returns false if the recipients email address is faulty otherwise true
+     */
     public static boolean sendFromServer(String recipient,String subject, String text) {
 
         String sender = "ciserverupdate@gmail.com";
@@ -229,10 +301,11 @@ public class Functions {
     }
 
     /**
-     * Creates a file, and writes a String to it.
+     * Creates a file named as fileName and writes the text String given as input to it
      * If file already exists then it will be overwritten.
-     * @param fileName the name of the file to write to
-     * @param text the string to write to file
+     *
+     * @param fileName
+     * @param text
      */
     public static void writeToFile(String fileName, String text){
         // Colons are not allowed in filenames. Replace with semi colons.
@@ -250,9 +323,10 @@ public class Functions {
     }
 
     /**
-     * Reads a file and returns contents as a String.
-     * @param fileName the file to read
-     * @return the contents of the file
+     * Reads a file and returns its content as a String
+     *
+     * @param fileName
+     * @return content
      */
     public static String readFile(String fileName) {
         String content = "";
@@ -267,6 +341,7 @@ public class Functions {
 
     /**
      * Prints the contents of a file to the web page that the printwriter object is writing to, in HTML format.
+     *
      * @param fileName file to print
      * @param title the title the web tab should have
      * @param pw the PrintWriter object that is printing to the web page
@@ -305,6 +380,7 @@ public class Functions {
 
     /**
      * Clears the web page that is being printed to
+     *
      * @param response the HttpServletResponse object which is printing to the webpage.
      */
     public static void clearPage(HttpServletResponse response) {
@@ -312,9 +388,10 @@ public class Functions {
     }
 
     /**
-     * Adds text to a file, if it already exists.
-     * @param fileName file to add text to
-     * @param text the text you want to add to the file
+     * Adds a given text as a String to a given file if the file exists
+     *
+     * @param fileName
+     * @param text
      */
     public static void appendToFile(String fileName, String text) {
         try {
@@ -326,6 +403,7 @@ public class Functions {
 
     /**
      * Returns a String in HTML format, which includes links to each individual commit.
+     *
      * @return String String in HTML format, which includes links to each individual commit.
      */
     public static String getLinksToBuildsHTML() {
@@ -354,6 +432,7 @@ public class Functions {
     /**
      * Processes the requested URL to a specific build.
      * Prints a web page in HTML format, with tests result for that specific build.
+     *
      * @param requestedURL the request URL
      * @param response the HttpServletResponse which can write to the page
      * @throws IOException if an exception is thrown when trying to write to the page

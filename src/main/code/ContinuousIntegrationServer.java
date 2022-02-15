@@ -29,9 +29,18 @@ import java.lang.StringBuilder;
 */
 public class ContinuousIntegrationServer extends AbstractHandler
 {
-    // This function is called each time the github webhook is activated.
-    // The branch of the new commit will be cloned, compiled, and tested.
-    // Finally, the user who made the commit will be notified of the results.
+
+    /**
+     * Called each time the github webhook is activated. The branch of the new commit will be cloned,
+     * compiled, and tested. Finally, the user who made the commit will be notified of the results.
+     *
+     * @param target
+     * @param baseRequest
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -55,8 +64,18 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
     }
 
+    /**
+     * Called when someone visits the page localhost:8011, when the server is running.
+     *
+     * @param target
+     * @param baseRequest
+     * @param request
+     * @param response
+     * @param JSONstring
+     * @throws IOException
+     * @throws ServletException
+     */
 
-    // This function is called when someone visits the page localhost:8011, when the server is running.
     public void handleWebsiteVisit(String target,
                                    Request baseRequest,
                                    HttpServletRequest request,
@@ -74,6 +93,18 @@ public class ContinuousIntegrationServer extends AbstractHandler
         Functions.processURLrequest(requestedURL, response);
     }
 
+    /**
+     * Called everytime a new commit is pushed to the github repository. Checks if the server code and the tests
+     * are compilable. Sends an email with the results of the compilations to the committer.
+     *
+     * @param target
+     * @param baseRequest
+     * @param request
+     * @param response
+     * @param JSONstring
+     * @throws IOException
+     * @throws ServletException
+     */
     public void handleNewCommit(String target,
                                 Request baseRequest,
                                 HttpServletRequest request,
@@ -164,7 +195,12 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
     }
 
-    // used to start the CI server in command line
+    /**
+     * Used to start the ContinuousIntegrationServer in command line
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception
     {
         Server server = new Server(8011);
