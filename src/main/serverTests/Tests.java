@@ -94,7 +94,7 @@ public class Tests {
         // Arrange: Add an invalid email as recipient
         String email = "invalid email";
 
-        assertFalse(Functions.sendFromServer(email, "text"));
+        assertFalse(Functions.sendFromServer(email,"text", "text"));
     }
 
     @Test
@@ -129,13 +129,4 @@ public class Tests {
       // System.out.println("exit:" + exitcode);
        assertFalse(testResults.contains("Failures: "));//exitcode.equals("0")
     }
-
-    @Test
-    public void test_testExcecution2() throws IOException {
-        // Arrange
-
-       assertFalse(false);
-    }
-
-
 }

@@ -126,7 +126,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 else{
                     message.append("Tests passed.\n");
                 }
-                message.append("\n--- Specific test info --- \n");//
+                message.append("\n--- Specific test info --- \n");
                 message.append(testResults+"\n");
             }
             else {
