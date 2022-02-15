@@ -1,15 +1,4 @@
-package main.serverTests;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.Properties;
-import java.util.Scanner;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
-
+package main.mockTesting;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.beans.Transient;
@@ -25,7 +14,7 @@ public class mockTests {
     public void test1() throws IOException {
         // Arrange
         boolean tru = true;
-		
+
         // Assert
         assertTrue(tru);
     }
