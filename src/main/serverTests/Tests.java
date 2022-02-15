@@ -17,6 +17,7 @@ import java.beans.Transient;
 import main.code.*;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 // This class includes tests for various functions.
 public class Tests {
@@ -46,6 +47,35 @@ public class Tests {
     }
 
     @Test
+    public void test_getCommitHash() throws IOException {
+        // Arrange
+        String JSONstring = "{\"ref\":\"refs/heads/someBranchName\",\"before\":\"c747cb43fd0c8564151dc4d1bdbaf7a37cde2638\",\"after\":\"9c9ebf3cd4262d2de0d94f73e4bb4ea0ecf7d228\",\"repository\": {}\"";
+
+        // Act
+        String extractedCommitHash = Functions.getCommitHash(JSONstring);
+
+        // Assert
+        String expectedCommitHash = "9c9ebf3cd4262d2de0d94f73e4bb4ea0ecf7d228";
+        assertTrue(extractedCommitHash.equals(expectedCommitHash));
+    }
+
+    @Test
+    public void test_getCommitTimestamp() throws IOException {
+        // Arrange
+        String JSONstring = "{\"ref\":\"refs/heads/someBranchName\"..." +
+                            "commits\":[{\"id\":\"bd58a21891ad0ce4f3cc1f303b32383f654cb7b3\",\"tree_id\":\"8574623057713cf6bf8aedcb76c063714abd8a10\n" +
+                            "distinct\":true,\"message\":\"Fixed #93. localhost:8011 has links to each build, (#94)\n\nwith test-results info.\"," +
+                            "\"timestamp\":\"2022-02-15T15:53:54+01:00\",\"url\":\"...";
+
+        // Act
+        String extractedTimestamp = Functions.getCommitTimestamp(JSONstring);
+
+        // Assert
+        String expectedTimestamp = "2022-02-15T15:53:54+01:00";
+        assertTrue(extractedTimestamp.equals(expectedTimestamp));
+    }
+
+    @Test
     public void test_cloneBranch() throws IOException {
         // Arrange: Delete the old cloned repo
         Functions.deleteClonedRepo();
@@ -60,19 +90,11 @@ public class Tests {
     }
 
     @Test
-    public void test_sendFromServer1() throws IOException {
+    public void test_sendFromServer_invalidEmail() throws IOException {
         // Arrange: Add an invalid email as recipient
-        String email = "xxxxx";
+        String email = "invalid email";
 
-        assertFalse(Functions.sendFromServer(email, "text"));
-    }
-
-    @Test
-    public void test_sendFromServer2() throws IOException {
-        // Arrange: Add an invalid email as recipient
-        String email = "xxxx@x";
-
-        assertFalse(Functions.sendFromServer(email, "text"));
+        assertFalse(Functions.sendFromServer(email,"text", "text"));
     }
 
     @Test
@@ -92,7 +114,19 @@ public class Tests {
 
         String actual = Functions.readFile("main/serverTests/testFile.txt");
         String expected = "some text and some more";
-        
+
         assertTrue(actual.equals(expected));
+    }
+
+    @Test
+    public void test_testExcecution() throws IOException {
+        // Arrange
+       String mockTestScript = "runMockTests.sh";
+       // Assert
+       String testResults = Functions.runTests(mockTestScript);
+       //System.out.println("Results: "+testResults + "End of results");
+      // String exitcode = Character.toString(testResults.charAt(testResults.length()-1));
+      // System.out.println("exit:" + exitcode);
+       assertFalse(testResults.contains("Failures: "));//exitcode.equals("0")
     }
 }

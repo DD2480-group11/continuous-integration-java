@@ -12,6 +12,9 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Scanner;
@@ -25,6 +28,7 @@ import java.util.Formatter;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A class containing functions needed to run the Continuous Integration Server
@@ -43,6 +47,7 @@ public class Functions {
         Process process = pb.start();
 
         String result = new String(process.getInputStream().readAllBytes());
+        //int exitCode = process.exitValue();
         return result;
     }
 
@@ -112,16 +117,17 @@ public class Functions {
     }
 
     /**
-     * Runs the tests in main/serverTests.Tests.java and launches runBashScript which
+     * Runs the tests specified in the input script and launches runBashScript which
      * returns the output of those tests
      *
+     * param script
      * @return runBashScript("runTests.sh")
      * @throws IOException
      */
-    public static String runTests() throws IOException{
-        return runBashScript("runTests.sh");
+    public static String runTests(String script) throws IOException{
+        return runBashScript(script);
     }
-
+  
     /**
      * Turns a JSON HttpServletRequest object into a String
      *
@@ -189,21 +195,79 @@ public class Functions {
     }
 
     /**
-     * Sends an email containing the text String given as input from the servers email address to given input email
-     * to the given email address of the recipent
+     * Takes a JSON String with github commit information from a github webhook.
+     * Extracts and returns the commit hash of the committer.
+     *
+     * @param JSONstring the String containg the JSON info
+     * @return the commit hash of the commit
+     * @throws IOException
+     */
+    public static String getCommitHash(String JSONstring) throws IOException {
+        String commitHash = "";
+
+        // Get index of "after" section, where the hash is located
+        String afterStr = "\"after\":\"";
+        int i = JSONstring.indexOf(afterStr);
+
+        // Get index where the actual hash code starts
+        i += afterStr.length();
+        char c = JSONstring.charAt(i);
+
+        // Extract all the chars from the hash
+        while (c != '"') {
+            commitHash += c;
+            i++;
+            c = JSONstring.charAt(i);
+        }
+
+        return commitHash;
+    }
+
+     /**
+     * Takes a JSON String with github commit information from a github webhook and returns
+     * the timestamp of the commit
+     *
+     * @param JSONstring
+     * @return
+     * @throws IOException
+     */
+    public static String getCommitTimestamp(String JSONstring) throws IOException {
+        String timestamp = "";
+
+        // Get index of "after" section, where the hash is located
+        String timestampStr = "\"timestamp\":\"";
+        int i = JSONstring.indexOf(timestampStr);
+        // "after": "bd58a21891ad0ce4f3cc1f303b32383f654cb7b3",
+        // "timestamp": "2022-02-15T15:53:54+01:00",
+
+
+        // Get index where the actual hash code starts
+        i += timestampStr.length();
+        char c = JSONstring.charAt(i);
+
+        // Extract all the chars from the hash
+        while (c != '"') {
+            timestamp += c;
+            i++;
+            c = JSONstring.charAt(i);
+        }
+
+        return timestamp;
+    }
+  
+    /**
+     * Sends an email with a given text String as a message and a given String as subject from the server to the 
+     * given email address of the recipent
      *
      * @param recipient The recipents email address
+     * @param subject The text to be inserted in the subject field of the email
      * @param text The text to send in an email
      * @return true or false Returns false if the recipients email address is faulty otherwise true
      */
-    public static boolean sendFromServer(String recipient, String text) {
+    public static boolean sendFromServer(String recipient,String subject, String text) {
 
         String sender = "ciserverupdate@gmail.com";
         String password = "skickamail1!";
-
-        if(!(recipient.contains("@") && recipient.contains(".")) ){
-            return false;
-        }
 
         // setting up gmail smtp
         Properties properties = new Properties();
@@ -224,15 +288,16 @@ public class Functions {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(sender));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-            message.setSubject("Result from CI Server");
+            message.setSubject("Result: " + subject);
             message.setText(text);
             Transport.send(message);
+            return true;
         }
-        catch (MessagingException mex)
+        catch (Exception e)
         {
-            mex.printStackTrace();
+            //e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
     /**
@@ -242,14 +307,17 @@ public class Functions {
      * @param fileName
      * @param text
      */
-    public static void writeToFile(String fileName, String text){ 
+    public static void writeToFile(String fileName, String text){
+        // Colons are not allowed in filenames. Replace with semi colons.
+        fileName = fileName.replace(":", ";");
+
         Formatter formatter;
         try {
-            formatter = new Formatter(fileName);  
+            formatter = new Formatter(fileName);
             formatter.format("%s", text);
             formatter.close();
         }
-        catch(Exception e) {     
+        catch(Exception e) {
             System.out.println("Error: file could not be created or written to.");
         }
     }
@@ -272,6 +340,54 @@ public class Functions {
     }
 
     /**
+     * Prints the contents of a file to the web page that the printwriter object is writing to, in HTML format.
+     *
+     * @param fileName file to print
+     * @param title the title the web tab should have
+     * @param pw the PrintWriter object that is printing to the web page
+     * @param response the HttpServletResponse object which is printing to the webpage (used to clear the page).
+     */
+    public static void printFileToPage(String fileName, String title, PrintWriter pw, HttpServletResponse response) {
+        clearPage(response);
+
+        String HTML = String.join("\n",
+            "<html>",
+                "<head>",
+                    "<title> " + title + " </title>",
+                "</head>",
+                "<body>",
+                "<p> <a href=\"http://localhost:8011\">Go to build list</a> </p>"
+        );
+
+        try {
+            File myObj = new File(fileName);
+            Scanner sc = new Scanner(myObj);
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                HTML += "<p>" + line + "</p>";
+            }
+            sc.close();
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        HTML += "</body> </html>";
+
+        pw.println(HTML);
+    }
+
+    /**
+     * Clears the web page that is being printed to
+     *
+     * @param response the HttpServletResponse object which is printing to the webpage.
+     */
+    public static void clearPage(HttpServletResponse response) {
+        response.resetBuffer();
+    }
+
+    /**
      * Adds a given text as a String to a given file if the file exists
      *
      * @param fileName
@@ -284,5 +400,57 @@ public class Functions {
             System.out.println("Error: the file " + fileName + " does not exist.");
         }
     }
-}
 
+    /**
+     * Returns a String in HTML format, which includes links to each individual commit.
+     *
+     * @return String String in HTML format, which includes links to each individual commit.
+     */
+    public static String getLinksToBuildsHTML() {
+        String HTML = "<html> <head> <title> Builds </title> </head> <body>";
+
+        HTML += "<h1> Build links </h1>";
+        HTML += "<p> The builds are sorted by their commit timestamps, with the most recent one at the top. </p>";
+        HTML += "<p> Each file name is a combination of a timestamp and commit hash. </p>";
+
+        // Make an array, where each element is one file with build info.
+        File folder = new File("main/builds");
+        File[] listOfFiles = folder.listFiles();
+
+        // Add one link for each file with build info.
+        for (int i = listOfFiles.length - 1; i > -1; i--) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                HTML += "<p> <a href=\"./main/builds/" + fileName + "\">" + fileName + "</a> </p>";
+            }
+        }
+
+        HTML += "</body> </html>";
+        return HTML;
+    }
+
+    /**
+     * Processes the requested URL to a specific build.
+     * Prints a web page in HTML format, with tests result for that specific build.
+     *
+     * @param requestedURL the request URL
+     * @param response the HttpServletResponse which can write to the page
+     * @throws IOException if an exception is thrown when trying to write to the page
+     */
+    public static void processURLrequest(String requestedURL, HttpServletResponse response) throws IOException  {
+        // Make an array, where each element is one file with build info.
+        File folder = new File("main/builds");
+        File[] listOfFiles = folder.listFiles();
+
+        // For each file with build info, create a link to the correct file and print it to the page.
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                if (requestedURL.equals("http://localhost:8011/main/builds/" + fileName)) {
+                    PrintWriter pw = response.getWriter();
+                    Functions.printFileToPage("main/builds/" + fileName, fileName, pw, response);
+                }
+            }
+        }
+    }
+}

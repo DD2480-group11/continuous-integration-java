@@ -1,0 +1,16 @@
+--- Test summary --- 
+Code compiled succesfully
+Tests compiled succesfully.
+
+--- Specific test info --- 
+JUnit version 4.12
+........
+Time: 2.143
+
+OK (8 tests)
+
+
+--- Commit specifics ---
+Branch name:	main
+Timestamp:	2022-02-15T16:55:23+01:00
+Hash:		e5ad1c53efab712006ee80c2d59bb6c8e1a99bb9
