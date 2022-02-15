@@ -153,12 +153,42 @@ public class Functions {
 
         // Extract all the chars from the hash
         while (c != '"') {
-                commitHash += c;
-                i++;
-                c = JSONstring.charAt(i);
+            commitHash += c;
+            i++;
+            c = JSONstring.charAt(i);
         }
 
         return commitHash;
+    }
+
+        /**
+     * 
+     * @param JSONstring
+     * @return
+     * @throws IOException
+     */
+    public static String getCommitTimestamp(String JSONstring) throws IOException {
+        String timestamp = "";
+
+        // Get index of "after" section, where the hash is located
+        String timestampStr = "\"timestamp\":\"";
+        int i = JSONstring.indexOf(timestampStr);
+        // "after": "bd58a21891ad0ce4f3cc1f303b32383f654cb7b3",
+        // "timestamp": "2022-02-15T15:53:54+01:00",
+
+
+        // Get index where the actual hash code starts
+        i += timestampStr.length();
+        char c = JSONstring.charAt(i);
+
+        // Extract all the chars from the hash
+        while (c != '"') {
+            timestamp += c;
+            i++;
+            c = JSONstring.charAt(i);
+        }
+
+        return timestamp;
     }
 
 
@@ -205,6 +235,10 @@ public class Functions {
      * @param text the string to write to file
      */
     public static void writeToFile(String fileName, String text){ 
+
+        // Colons are not allowed in filenames. Replace with semi colons.
+        fileName = fileName.replace(":", ";");
+
         Formatter formatter;
         try {
             formatter = new Formatter(fileName);  

@@ -59,6 +59,22 @@ public class Tests {
     }
 
     @Test
+    public void test_getCommitTimestamp() throws IOException {
+        // Arrange
+        String JSONstring = "{\"ref\":\"refs/heads/someBranchName\"..." +
+                            "commits\":[{\"id\":\"bd58a21891ad0ce4f3cc1f303b32383f654cb7b3\",\"tree_id\":\"8574623057713cf6bf8aedcb76c063714abd8a10\n" +
+                            "distinct\":true,\"message\":\"Fixed #93. localhost:8011 has links to each build, (#94)\n\nwith test-results info.\"," +
+                            "\"timestamp\":\"2022-02-15T15:53:54+01:00\",\"url\":\"...";
+
+        // Act
+        String extractedTimestamp = Functions.getCommitTimestamp(JSONstring);
+
+        // Assert
+        String expectedTimestamp = "2022-02-15T15:53:54+01:00";
+        assertTrue(extractedTimestamp.equals(expectedTimestamp));
+    }
+
+    @Test
     public void test_cloneBranch() throws IOException {
         // Arrange: Delete the old cloned repo
         Functions.deleteClonedRepo();
