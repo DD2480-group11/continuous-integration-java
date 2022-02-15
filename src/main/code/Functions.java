@@ -12,6 +12,9 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Scanner;
@@ -227,6 +230,51 @@ public class Functions {
             System.out.println("Error: could not read file " + fileName);
         }
         return content;
+    }
+
+    /**
+     * Prints the contents of a file to the web page that the printwriter object is writing to, in HTML format.
+     * @param fileName file to print
+     * @param title the title the web tab should have
+     * @param pw the PrintWriter object that is printing to the web page
+     * @param response the HttpServletResponse object which is printing to the webpage (used to clear the page).
+     */
+    public static void printFileToPage(String fileName, String title, PrintWriter pw, HttpServletResponse response) {
+        clearPage(response);
+
+        String HTML = String.join("\n",
+            "<html>",
+                "<head>",
+                    "<title> " + title + " </title>",
+                "</head>",
+                "<body>"
+        );
+
+        try {
+            File myObj = new File(fileName);
+            Scanner sc = new Scanner(myObj);
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                HTML += "<p>" + line + "</p>";
+            }
+            sc.close();
+        } 
+        catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        HTML += "</body> </html>";
+
+        pw.println(HTML);
+    }
+
+    /**
+     * Clears the web page that is being printed to
+     * @param response the HttpServletResponse object which is printing to the webpage. 
+     */
+    public static void clearPage(HttpServletResponse response) {
+        response.resetBuffer();
     }
 
     /**

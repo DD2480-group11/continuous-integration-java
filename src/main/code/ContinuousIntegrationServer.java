@@ -12,6 +12,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Scanner;
@@ -63,15 +64,25 @@ public class ContinuousIntegrationServer extends AbstractHandler
                                    String JSONstring)
         throws IOException, ServletException 
     {
-        String HTML = "<html>\n " +
-        "<head>\n " +
-        "    <title> My Website </title>\n " +
-            "</head>\n " +
-        "<body>\n " +
-        "text\n " +
-        "</body>\n " +
-        "</html>";
+        String HTML = String.join("\n",
+            "<html>",
+                "<head>",
+                    "<title> Builds </title>",
+                "</head>",
+                "<body>",
+                    "<a href=\"./main/builds/1acb6a5e56c243f91248940e6468d36309188d5f.txt\">link</a>",
+                "</body>",
+            "</html>"
+        );
+
         response.getWriter().println(HTML);
+
+        String url = request.getRequestURL().toString();
+        System.out.println(url);
+        if (url.equals("http://localhost:8011/main/builds/1acb6a5e56c243f91248940e6468d36309188d5f.txt")) {
+            PrintWriter pw = response.getWriter();
+            Functions.printFileToPage("main/builds/1acb6a5e56c243f91248940e6468d36309188d5f.txt", "some title", pw, response);
+        }
     }
 
     public void handleNewCommit(String target,
@@ -158,6 +169,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
     public static void main(String[] args) throws Exception
     {
         Server server = new Server(8011);
+
         server.setHandler(new ContinuousIntegrationServer());
         server.start();
         server.join();
