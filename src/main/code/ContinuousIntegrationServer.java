@@ -131,7 +131,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             //String testCompilationResult = Functions.compileTestsCheck();
             boolean testsPassed = true;
 
-            message.append("--- Test summary --- \n");//
+            message.append("--- Build summary --- \n");//
             // Check if compilation of the server is successful
             if (codeCompiled) {
                 message.append("Code compiled succesfully\n");
@@ -188,7 +188,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             // The test results will be printed to terminal, sent via email to commiter, and written to a build file.
             System.out.println(messageStr);
             Functions.sendFromServer(email, buildResult, messageStr);
-            Functions.writeToFile("main/builds/" + commitTimestamp + commitHash + ".txt", messageStr);
+            Functions.writeToFile("main/builds/" + commitTimestamp + commitHash + ".txt", buildResult + "\n" + messageStr);
 
             // Repond to github webhook.
             response.getWriter().println("CI job done");
