@@ -1,0 +1,18 @@
+Build successful
+--- Build summary --- 
+Code compiled succesfully
+Tests compiled succesfully.
+Tests passed.
+
+--- Specific test info --- 
+JUnit version 4.12
+..........
+Time: 2.248
+
+OK (10 tests)
+
+
+--- Commit specifics ---
+Branch name:	qwe
+Timestamp:	2022-02-16T11:44:55+01:00
+Hash:		4bd4f93123f5764a97066d1d4ca8f67b25609efc
