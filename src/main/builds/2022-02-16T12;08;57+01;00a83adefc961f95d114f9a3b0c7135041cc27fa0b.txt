@@ -1,0 +1,18 @@
+Build successful
+--- Build summary --- 
+Code compiled succesfully
+Tests compiled succesfully.
+Tests passed.
+
+--- Specific test info --- 
+JUnit version 4.12
+..........
+Time: 2.48
+
+OK (10 tests)
+
+
+--- Commit specifics ---
+Branch name:	issue/127
+Timestamp:	2022-02-16T12:08:57+01:00
+Hash:		a83adefc961f95d114f9a3b0c7135041cc27fa0b
