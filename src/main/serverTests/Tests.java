@@ -119,18 +119,6 @@ public class Tests {
     }
 
     @Test
-    public void test_testExcecution() throws IOException {
-        // Arrange
-       String mockTestScript = "runMockTests.sh";
-       // Assert
-       String testResults = Functions.runTests(mockTestScript);
-       //System.out.println("Results: "+testResults + "End of results");
-      // String exitcode = Character.toString(testResults.charAt(testResults.length()-1));
-      // System.out.println("exit:" + exitcode);
-       assertFalse(testResults.contains("Failures: "));//exitcode.equals("0")
-    }
-
-    @Test
     public void test_newCommitWasMade_false() {
         // Arrange a JSONstring which is generated when a new webhook is created, i.e. a new commit has NOT been made.
         String JSONstring = "{\"zen\":\"Practicality beats purity.\",\"hook_id\":343438962,\"hook\":{\"type\":\"Repository\",\"id\":343438962,\"name\":\"web\",\"active\":true";

@@ -53,7 +53,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // Convert the JSON payload into a String
         String JSONstring = Functions.JSONtoString(request);
-        
+
 
         // Depending on what request has come in, call different functions
         if (JSONstring.equals("")) {
@@ -125,9 +125,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
             // Construct the email with compilation and test results
             StringBuilder message = new StringBuilder();
-            boolean codeCompiled = Functions.compilationCheck();
+            boolean codeCompiled = Functions.compilationCheck("compilationCheck.sh");
             //String codeCompilationResult = Functions.compilationCheck();
-            boolean  testsCompiled = Functions.compileTestsCheck();
+            boolean  testsCompiled = Functions.compilationCheck("compileTestsCheck.sh");
             //String testCompilationResult = Functions.compileTestsCheck();
             boolean testsPassed = true;
 
