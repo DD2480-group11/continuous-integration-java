@@ -134,7 +134,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             message.append("--- Build summary --- \n");//
             // Check if compilation of the server is successful
             if (codeCompiled) {
-                message.append("Code compiled succesfully\n");
+                message.append("Code compiled successfully\n");
             }
             else {
                 //TODO: add compilation errors
@@ -145,7 +145,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
             // Check if tests compilation is successful.
             if (testsCompiled) {
-                message.append("Tests compiled succesfully.\n");
+                message.append("Tests compiled successfully.\n");
 
                 //If tests compile, run the tests.
                 String testResults = Functions.runTests("runTests.sh");
