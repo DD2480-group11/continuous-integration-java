@@ -91,30 +91,18 @@ public class Functions {
     }
 
     /**
-     * Tries to compile the server of the cloned repo, using the bash script "compilationCheck.sh"
+     * Tries to compile the server of the cloned repo using a given script and launches compilationResult
+     * which returns true if it was successful, otherwise false
      *
+     * @param script
      * @return compilationResult.equals("success\n")
      * @throws IOException
      */
-    //
-    // Returns true if compilation was successful, otherwise false.
     public static boolean compilationCheck(String script) throws IOException {
         String compilationResult = runBashScript(script);
         return compilationResult.equals("success\n");
     }
 
-    /**
-     * Tries to compile the tests of the cloned repo, using the bash script "compileTestsCheck.sh"
-     *
-     * @return compilationResult.equals("success\n")
-     * @throws IOException
-     */
-
-    // Returns true if compilation was successful, otherwise false.
-    public static boolean compileTestsCheck() throws IOException {
-        String compilationResult = runBashScript("compileTestsCheck.sh");
-         return compilationResult.equals("success\n");
-    }
 
     /**
      * Runs the tests specified in the input script and launches runBashScript which
