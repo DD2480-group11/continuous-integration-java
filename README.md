@@ -96,7 +96,7 @@ Each file name is a combination of a timestamp and commit hash.
 ```
 
 
-After clicking one of the build links, the following web page is shown. This build log will also be sent via email to the committer, and it will also be printed in the server terminal. The first line is a button which takes you back to the build line. The second line summarizes whether or not the build was successful.
+After clicking one of the build links, the following web page is shown. This build log will also be sent via email to the committer, and it will also be printed in the server terminal. The first line is a button which takes you back to the build list page. The second line summarizes whether or not the build was successful.
 ```
 Go to build list
 Build successful
