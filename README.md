@@ -13,6 +13,11 @@ java -cp .:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar:javax.mail.jar:jakar
 
 The first command makes sure the correct version of Jetty is used. The second command compiles the relevant Server files, with some .jar files. The third command starts the server.
 
+## Javadocs
+
+There are javadoc files available in the folder `src/doc`.
+
+
 ## How to set up the webhook
 
 Navigate to a folder where you have the `ngrok` file. ngrok download instructions and more specific webhook instructions are available [here](https://github.com/KTH-DD2480/smallest-java-ci). Start ngrok with the following command.
